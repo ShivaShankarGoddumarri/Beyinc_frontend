@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
@@ -21,16 +21,17 @@ const Login = () => {
 
   const isFormValid =
     (loginType === "email" && isEmailValid && isPasswordValid) ||
-    (loginType === "mobile" && isMobileValid && isPasswordValid);
+    (loginType === "mobile" && isMobileValid && isPasswordValid && isMobileOtpValid);
+
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     if (isFormValid) {
-      alert("Login successful!");
+      navigate('/Home');
     } else {
       alert("Invalid login credentials");
     }
   };
-
 
   useEffect(() => {
     if (isMobileOtpSent) {
@@ -47,28 +48,39 @@ const Login = () => {
     setOtp("");
     setOtpVisible(false);
     setIsMobileValid(false);
+    setMobileOtp(""); // Reset mobile OTP when login type changes
   };
 
   const handleGetOtp = () => {
     setOtpVisible(true);
   };
 
-  const sendMobileOtp = (e) => {
-    e.preventDefault();
-    setTimeout(() => {
-      setIsMobileOtpSent(true);
-    }, 1000);
-  };
-
-  
   const handleMobileChange = (value) => {
     setMobile(value);
     setIsMobileValid(/^[0-9]{10}$/.test(value));
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    if (
+      (loginType === "email" && isEmailValid && isPasswordValid) ||
+      (loginType === "mobile" && isMobileValid && isPasswordValid && isMobileOtpValid)
+    ) {
+      // If using mobile login, setMobileOtp here (assuming you want to store the entered OTP)
+      if (loginType === "mobile") {
+        setMobileOtp(otp);
+      }
+
+      navigate('/Home');
+    } else {
+      alert("Invalid login credentials");
+    }
+  };
+
   return (
     <div className="form-container">
-      <form className="form">
+      <form className="form" onSubmit={handleFormSubmit}>
         <center>
           <h2>Login</h2>
           <p>Log in now to get full access.</p>
@@ -127,13 +139,15 @@ const Login = () => {
             )}
           </>
         )}
-        <button  type="button" onClick={handleLogin} disabled={!isFormValid}>
+        <button type="submit" disabled={!isFormValid}>
           Login
         </button>
         <p>
           Don't have an account? <RouterLink to="/signup">Sign Up</RouterLink>
         </p>
-        <p><RouterLink to="/forgotpassword">forgot Password?</RouterLink></p>
+        <p>
+          <RouterLink to="/forgotpassword">Forgot Password?</RouterLink>
+        </p>
       </form>
     </div>
   );
