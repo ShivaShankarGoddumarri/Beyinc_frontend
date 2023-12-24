@@ -1,30 +1,45 @@
-import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import "./Login.css";
 
 const Login = () => {
-  const [emailOrMobile, setEmailOrMobile] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mobile, setMobile] = useState("");
+
+  const isEmailValid = /[a-z]+@gmail.com/.test(email);
+  const isMobileValid = /^[0-9]{10}$/.test(mobile);
+  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
   const handleLogin = () => {
-    // Perform login logic here
-    // You can use emailOrMobile and password for authentication
+ 
+    if ((isEmailValid || isMobileValid) && isPasswordValid) {
+      alert("Login successful!");
+    } else {
+      alert("Invalid login credentials");
+    }
   };
 
   return (
     <div className="form-container">
-      <h2>Login</h2>
       <form className="form">
-        <label>Email or Mobile:</label>
+        <center>
+          <h2>Login</h2>
+          <p>Log in now to get full access.</p>
+        </center>
         <input
           type="text"
-          value={emailOrMobile}
-          onChange={(e) => setEmailOrMobile(e.target.value)}
+          value={email}
+          placeholder="Email Address or Mobile Number"
+          onChange={(e) => setEmail(e.target.value)}
         />
-
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-
-        <button type="button" onClick={handleLogin}>
+        <input
+          type="password"
+          value={password}
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button className="Login-Button" type="button" onClick={handleLogin}>
           Login
         </button>
         <p>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link as RouterLink } from 'react-router-dom';
 import './SignUp.css';
 
@@ -17,15 +17,14 @@ const SignUp = () => {
   const [emailOtpMessage, setEmailOtpMessage] = useState("");
   const [mobileOtpMessage, setMobileOtpMessage] = useState("");
 
-  const nameInputRef = useRef(null);
-
   // Validation Part
   const isEmailValid = /[a-z]+@gmail.com/.test(email);
   const isMobileValid = /^[0-9]{10}$/.test(mobile);
   const isNameValid = name !== "";
   const isEmailOtpValid = isNaN(emailOtp) === false && emailOtp.length === 4;
   const isMobileOtpValid = isNaN(mobileOtp) === false && mobileOtp.length === 4;
-  const isPasswordValid = password.length >= 6;
+  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+  
 
   useEffect(() => {
     if (isEmailOtpSent) {
@@ -44,10 +43,6 @@ const SignUp = () => {
   useEffect(() => {
     setIsFormSubmitted(false);
   }, [email, emailOtp, mobile, mobileOtp, name, password]);
-
-  useEffect(() => {
-    nameInputRef.current.focus();
-  }, []);
 
   const sendEmailOtp = (e) => {
     e.preventDefault();
@@ -71,41 +66,37 @@ const SignUp = () => {
     isNameValid &&
     isPasswordValid;
 
-    return (
-      <div className="registration-form-container">
-        {!isFormSubmitted && (
-          <form>
-            <center>
-              <h2 style={{ marginTop: '40px', fontWeight: '400' }}>
-                Get Started Now
-              </h2>
-              <p>
-                It's free to join and gain full access to thousands of exciting investment opportunities.
-              </p>
-            </center>
-            <div
-              className={`input-container ${isNameValid ? "valid" : "invalid"}`}
-            >
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Full Name*"
-                ref={nameInputRef}
-              />
-            </div>
-            
-            <div
-              className={`input-container ${isEmailValid ? "valid" : "invalid"}`}
-            >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isEmailOtpSent}
-                placeholder="Email Address*"
-              />
-               {emailOtpMessage && (
+  return (
+    <div className="registration-form-container">
+      {!isFormSubmitted && (
+        <form>
+          <center>
+            <h2 style={{ marginTop: '40px', fontWeight: '400' }}>
+              Get Started Now
+            </h2>
+            <p style={{ fontSize: '14px' }}>
+              It's free to join and gain full access to thousands of exciting investment opportunities.
+            </p>
+          </center>
+
+          <div className="input-container">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Full Name*"
+            />
+          </div>
+
+          <div className="input-container">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isEmailOtpSent}
+              placeholder="Email Address*"
+            />
+            {emailOtpMessage && (
               <div className="success-message">{emailOtpMessage}</div>
             )}
             {!isEmailOtpSent && (
@@ -113,39 +104,29 @@ const SignUp = () => {
                 Get OTP
               </button>
             )}
-            </div>
-    
-           
-    
-            {isEmailOtpSent && (
-              <>
-                <div
-                  className={`input-container ${
-                    isEmailOtpValid ? "valid" : "invalid"
-                  }`}
-                >
-                  <input
-                    type="text"
-                    value={emailOtp}
-                    onChange={(e) => setEmailOtp(e.target.value)}
-                    placeholder="Enter Email OTP"
-                  />
-                </div>
-              </>
-            )}
-            
-            <div
-              className={`input-container ${
-                isMobileValid ? "valid" : "invalid"
-              }`}
-            >
-              <input
-                type="text"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-                placeholder="Mobile Number*"
-              />
-              {mobileOtpMessage && (
+          </div>
+
+          {isEmailOtpSent && (
+            <>
+              <div className="input-container">
+                <input
+                  type="text"
+                  value={emailOtp}
+                  onChange={(e) => setEmailOtp(e.target.value)}
+                  placeholder="Enter Email OTP"
+                />
+              </div>
+            </>
+          )}
+
+          <div className="input-container">
+            <input
+              type="text"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              placeholder="Mobile Number*"
+            />
+            {mobileOtpMessage && (
               <div className="success-message">{mobileOtpMessage}</div>
             )}
             {!isMobileOtpSent && (
@@ -153,50 +134,40 @@ const SignUp = () => {
                 Get OTP
               </button>
             )}
-            </div>
-    
-            
-    
-            {isMobileOtpSent && (
-              <>
-                <div
-                  className={`input-container ${
-                    isMobileOtpValid ? "valid" : "invalid"
-                  }`}
-                >
-                  <input
-                    type="text"
-                    value={mobileOtp}
-                    onChange={(e) => setMobileOtp(e.target.value)}
-                    placeholder="Enter Mobile OTP"
-                  />
-                </div>
-              </>
-            )}
-           
-            <div
-              className={`input-container ${
-                isPasswordValid ? "valid" : "invalid"
-              }`}
-            >
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Create Password"
-              />
-            </div>
-    
-            <button className="submit-button" type="submit" disabled={!isFormValid}>
-              Submit
-            </button>
-            <p>
-              Already have an account? <RouterLink to="/login">Login</RouterLink>
-            </p>
-          </form>
-        )}
-      </div>
+          </div>
+
+          {isMobileOtpSent && (
+            <>
+              <div className="input-container">
+                <input
+                  type="text"
+                  value={mobileOtp}
+                  onChange={(e) => setMobileOtp(e.target.value)}
+                  placeholder="Enter Mobile OTP"
+                />
+              </div>
+            </>
+          )}
+
+          <div className="input-container">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Create Password*"
+            />
+          </div>
+
+          <button className="SignUp-Button" type="submit" disabled={!isFormValid}>
+            Signup
+          </button>
+          <p>
+            Already have an account? <RouterLink to="/login">Login</RouterLink>
+          </p>
+        </form>
+      )}
+    </div>
   );
 };
 
-export default SignUp
+export default SignUp;
