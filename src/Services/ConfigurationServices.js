@@ -63,5 +63,17 @@ export const ApiServices = {
             .catch((err) => reject(err));
     
         }) 
-    }
+    },
+    resetPassword : (obj) => {
+        return new Promise((resolve, reject) => {
+            axiosInstance.post(`/auth/forgotPassword`, obj)
+            .then((res) => {
+                if(res) {
+                    resolve(res)
+                }
+            })
+            .catch((err) => reject(err));
+    
+        }) 
+    },
 }
