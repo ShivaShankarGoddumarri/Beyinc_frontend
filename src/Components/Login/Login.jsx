@@ -5,6 +5,7 @@ import { ApiServices } from "../../Services/ConfigurationServices";
 import { useDispatch } from "react-redux";
 import { setToast } from "../../redux/AuthReducers/AuthReducer";
 import { ToastColors } from "../Toast/ToastColors";
+import axiosInstance from "../axiosInstance";
 
 const Login = () => {
   const [loginType, setLoginType] = useState("email");
@@ -84,12 +85,14 @@ const Login = () => {
       "email": email,
       "password": password,
     }
-    await ApiServices.login(obj).then((res)=>{
+    await ApiServices.login(obj).then(async (res)=>{
       dispatch(setToast({
         message: 'User Logged In Successfully !',
         bgColor: ToastColors.success,
         visibile: 'yes'
       }))
+      localStorage.setItem('user', JSON.stringify(res.data))
+      await axiosInstance.customFnAddTokenInHeader(res.data.accessToken)
       navigate('/')
     }).catch(err=>{
       dispatch(setToast({
@@ -113,12 +116,14 @@ const Login = () => {
       "phone": mobile,
       "password": password,
     }
-    await ApiServices.mobileLogin(obj).then((res)=>{
+    await ApiServices.mobileLogin(obj).then(async (res)=>{
       dispatch(setToast({
         message: 'User Logged In Successfully !',
         bgColor: ToastColors.success,
         visibile: 'yes'
       }))
+      localStorage.setItem('user', JSON.stringify(res.data))
+      await axiosInstance.customFnAddTokenInHeader(res.data.accessToken)
       navigate('/')
     }).catch(err=>{
       dispatch(setToast({

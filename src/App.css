@@ -89,6 +89,7 @@ label {
 
 input {
     width: 330px !important; 
+    outline: 0;
     padding: 15px;
     margin-bottom: 5px; 
     border: 1px solid lightgrey;
