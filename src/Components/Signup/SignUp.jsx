@@ -23,8 +23,7 @@ const SignUp = () => {
   const isNameValid = name !== "";
   const isEmailOtpValid = isNaN(emailOtp) === false && emailOtp.length === 4;
   const isMobileOtpValid = isNaN(mobileOtp) === false && mobileOtp.length === 4;
-  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
-  
+  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
   useEffect(() => {
     if (isEmailOtpSent) {
@@ -99,8 +98,8 @@ const SignUp = () => {
             {emailOtpMessage && (
               <div className="success-message">{emailOtpMessage}</div>
             )}
-            {!isEmailOtpSent && (
-              <button type="button" onClick={sendEmailOtp} disabled={!isEmailValid}>
+            {!isEmailOtpSent && isEmailValid && (
+              <button type="button" className="otp_button" onClick={sendEmailOtp}>
                 Get OTP
               </button>
             )}
@@ -129,8 +128,8 @@ const SignUp = () => {
             {mobileOtpMessage && (
               <div className="success-message">{mobileOtpMessage}</div>
             )}
-            {!isMobileOtpSent && (
-              <button type="button" onClick={sendMobileOtp} disabled={!isMobileValid}>
+            {!isMobileOtpSent && isMobileValid && (
+              <button type="button" className="otp_button" onClick={sendMobileOtp}>
                 Get OTP
               </button>
             )}
@@ -158,7 +157,7 @@ const SignUp = () => {
             />
           </div>
 
-          <button className="SignUp-Button" type="submit" disabled={!isFormValid}>
+          <button  type="submit" disabled={!isFormValid}>
             Signup
           </button>
           <p>

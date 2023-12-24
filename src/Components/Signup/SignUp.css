@@ -41,9 +41,16 @@ input {
     border-radius: 3px;
 }
 
+.validation-icon {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    color: #4caf50;
+}
 
 
-button {
+.otp_button {
     width: 20%;
     padding: 5px; 
     background-color:  #3b82f6;
@@ -58,8 +65,8 @@ button:disabled {
     cursor: not-allowed;
 }
 
-.SignUp-Button{
-    width: 350px;
+button{
+    width: 360px;
     padding: 15px; 
     background-color: #3b82f6;
     color: #fff;
@@ -67,6 +74,9 @@ button:disabled {
     border-radius: 3px;
     cursor: pointer;
 }
+button:hover {
+    background-color: #1e4bb8;
+  }
 
 .invalid input {
     border: 1px solid red;

@@ -1,23 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
+  const [loginType, setLoginType] = useState("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpVisible, setOtpVisible] = useState(false);
+  const [isMobileValid, setIsMobileValid] = useState(false);
+  const [mobileOtp, setMobileOtp] = useState("");
+
+  const [isMobileOtpSent, setIsMobileOtpSent] = useState(false);
+  const [mobileOtpMessage, setMobileOtpMessage] = useState("");
 
   const isEmailValid = /[a-z]+@gmail.com/.test(email);
-  const isMobileValid = /^[0-9]{10}$/.test(mobile);
-  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+  const isMobileOtpValid = isNaN(mobileOtp) === false && mobileOtp.length === 4;
+
+  const isFormValid =
+    (loginType === "email" && isEmailValid && isPasswordValid) ||
+    (loginType === "mobile" && isMobileValid && isPasswordValid);
 
   const handleLogin = () => {
- 
-    if ((isEmailValid || isMobileValid) && isPasswordValid) {
+    if (isFormValid) {
       alert("Login successful!");
     } else {
       alert("Invalid login credentials");
     }
+  };
+
+
+  useEffect(() => {
+    if (isMobileOtpSent) {
+      setMobileOtpMessage("Mobile OTP sent successfully.");
+      setTimeout(() => setMobileOtpMessage(""), 5000);
+    }
+  }, [isMobileOtpSent]);
+
+  const handleLoginTypeChange = (type) => {
+    setLoginType(type);
+    setEmail("");
+    setPassword("");
+    setMobile("");
+    setOtp("");
+    setOtpVisible(false);
+    setIsMobileValid(false);
+  };
+
+  const handleGetOtp = () => {
+    setOtpVisible(true);
+  };
+
+  const sendMobileOtp = (e) => {
+    e.preventDefault();
+    setTimeout(() => {
+      setIsMobileOtpSent(true);
+    }, 1000);
+  };
+
+  
+  const handleMobileChange = (value) => {
+    setMobile(value);
+    setIsMobileValid(/^[0-9]{10}$/.test(value));
   };
 
   return (
@@ -27,24 +73,67 @@ const Login = () => {
           <h2>Login</h2>
           <p>Log in now to get full access.</p>
         </center>
-        <input
-          type="text"
-          value={email}
-          placeholder="Email Address or Mobile Number"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          value={password}
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="Login-Button" type="button" onClick={handleLogin}>
+        <div className="login-type-toggle">
+          <span
+            className={loginType === "email" ? "active" : ""}
+            onClick={() => handleLoginTypeChange("email")}
+          >
+            Email
+          </span>
+          <span
+            className={loginType === "mobile" ? "active" : ""}
+            onClick={() => handleLoginTypeChange("mobile")}
+          >
+            Mobile
+          </span>
+        </div>
+        {loginType === "email" ? (
+          <>
+            <input
+              type="text"
+              value={email}
+              placeholder="Email Address"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              value={password}
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </>
+        ) : (
+          <>
+            <input
+              type="text"
+              value={mobile}
+              placeholder="Mobile Number"
+              onChange={(e) => handleMobileChange(e.target.value)}
+            />
+            {isMobileValid && !otpVisible && (
+              <button type="button" className="otp_button" onClick={handleGetOtp}>
+                Get OTP
+              </button>
+            )}
+            {otpVisible && (
+              <>
+                <input
+                  type="text"
+                  value={otp}
+                  placeholder="Enter OTP"
+                  onChange={(e) => setOtp(e.target.value)}
+                />
+              </>
+            )}
+          </>
+        )}
+        <button  type="button" onClick={handleLogin} disabled={!isFormValid}>
           Login
         </button>
         <p>
           Don't have an account? <RouterLink to="/signup">Sign Up</RouterLink>
         </p>
+        <p><RouterLink to="/forgotpassword">forgot Password?</RouterLink></p>
       </form>
     </div>
   );
