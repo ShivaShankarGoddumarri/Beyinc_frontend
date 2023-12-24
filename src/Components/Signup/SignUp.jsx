@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link as RouterLink } from 'react-router-dom';
 import './SignUp.css';
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setToast } from "../../redux/AuthReducers/AuthReducer";
+import { ToastColors } from "../Toast/ToastColors";
+import axiosInstance from "../axiosInstance";
+import { ApiServices } from "../../Services/ConfigurationServices";
+import { useNavigate } from "react-router-dom/dist";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -12,43 +19,137 @@ const SignUp = () => {
 
   const [isEmailOtpSent, setIsEmailOtpSent] = useState(false);
   const [isMobileOtpSent, setIsMobileOtpSent] = useState(false);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const [emailOtpMessage, setEmailOtpMessage] = useState("");
-  const [mobileOtpMessage, setMobileOtpMessage] = useState("");
+  const [emailVerified, setemailVerified] = useState(false);
+  const [mobileVerified, setmobileVerified] = useState(false);
 
   // Validation Part
-  const isEmailValid = /[a-z]+@gmail.com/.test(email);
+  const isEmailValid = /[a-zA-Z0-9]+@gmail.com/.test(email);
   const isMobileValid = /^[0-9]{10}$/.test(mobile);
   const isNameValid = name !== "";
-  const isEmailOtpValid = isNaN(emailOtp) === false && emailOtp.length === 4;
-  const isMobileOtpValid = isNaN(mobileOtp) === false && mobileOtp.length === 4;
   const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
-  useEffect(() => {
-    if (isEmailOtpSent) {
-      setEmailOtpMessage("Email OTP sent successfully.");
-      setTimeout(() => setEmailOtpMessage(""), 5000);
-    }
-  }, [isEmailOtpSent]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isMobileOtpSent) {
-      setMobileOtpMessage("Mobile OTP sent successfully.");
-      setTimeout(() => setMobileOtpMessage(""), 5000);
-    }
-  }, [isMobileOtpSent]);
 
-  useEffect(() => {
-    setIsFormSubmitted(false);
-  }, [email, emailOtp, mobile, mobileOtp, name, password]);
-
-  const sendEmailOtp = (e) => {
+  const sendEmailOtp = async (e) => {
     e.preventDefault();
-    setTimeout(() => {
+    await ApiServices.sendOtp({
+      "to": email,
+      "subject": "Email Verification"
+    }).then((res)=>{
+      dispatch(setToast({
+        message: 'OTP sent successfully !',
+        bgColor: ToastColors.success,
+        visibile: 'yes'
+      }))
       setIsEmailOtpSent(true);
-    }, 1000);
+    }).catch(err=>{
+      dispatch(setToast({
+        message: 'OTP sent successfully !',
+        bgColor: ToastColors.failure,
+        visibile: 'yes'
+      }))
+    })
+    setTimeout(()=>{
+      dispatch(setToast({
+        message: '',
+        bgColor: '',
+        visibile: 'no'
+      }))
+    }, 4000)
   };
+
+  const verifyOtp = async (e)=>{
+    e.preventDefault();
+    await ApiServices.verifyOtp({
+      "email": email,
+      "otp": emailOtp
+    }).then((res)=>{
+      dispatch(setToast({
+        message: 'Email verified successfully !',
+        bgColor: ToastColors.success,
+        visibile: 'yes'
+      }))
+      document.getElementById('emailVerify').style.display = 'none'
+      document.getElementById('emailOtpInput').disabled = true;
+      setemailVerified(true);
+    }).catch(err=>{
+      dispatch(setToast({
+        message: 'OTP Entered Wrong',
+        bgColor: ToastColors.failure,
+        visibile: 'yes'
+      }))
+    })
+    setTimeout(()=>{
+      dispatch(setToast({
+        message: '',
+        bgColor: '',
+        visibile: 'no'
+      }))
+    }, 4000)
+  }
+
+  const verifyMobileOtp = async (e)=>{
+    e.preventDefault();
+    await ApiServices.verifyOtp({
+      "email": email,
+      "otp": emailOtp
+    }).then((res)=>{
+      dispatch(setToast({
+        message: 'Email verified successfully !',
+        bgColor: ToastColors.success,
+        visibile: 'yes'
+      }))
+      document.getElementById('mobileVerify').style.display = 'none'
+      document.getElementById('mobileOtpInput').disabled = true;
+      setmobileVerified(true);
+    }).catch(err=>{
+      dispatch(setToast({
+        message: 'OTP Entered Wrong',
+        bgColor: ToastColors.failure,
+        visibile: 'yes'
+      }))
+    })
+    setTimeout(()=>{
+      dispatch(setToast({
+        message: '',
+        bgColor: '',
+        visibile: 'no'
+      }))
+    }, 4000)
+  }
+
+  const signup = async (e) => {
+    e.preventDefault();
+    await ApiServices.register({
+      "email": email,
+      "password": password,
+      "userName": name,
+      "phone": mobile
+    }).then((res)=>{
+      dispatch(setToast({
+        message: 'User Registered Successfully !',
+        bgColor: ToastColors.success,
+        visibile: 'yes'
+      }))
+      navigate('/login')
+    }).catch(err=>{
+      dispatch(setToast({
+        message: err.response.data.message,
+        bgColor: ToastColors.failure,
+        visibile: 'yes'
+      }))
+    })
+    setTimeout(()=>{
+      dispatch(setToast({
+        message: '',
+        bgColor: '',
+        visibile: 'no'
+      }))
+    }, 4000)
+  }
 
   const sendMobileOtp = (e) => {
     e.preventDefault();
@@ -60,14 +161,14 @@ const SignUp = () => {
   const isFormValid =
     isEmailValid &&
     isMobileValid &&
-    isEmailOtpValid &&
-    isMobileOtpValid &&
+    emailVerified &&
+    mobileVerified &&
     isNameValid &&
     isPasswordValid;
 
   return (
     <div className="registration-form-container">
-      {!isFormSubmitted && (
+      
         <form>
           <center>
             <h2 style={{ marginTop: '40px', fontWeight: '400' }}>
@@ -95,9 +196,6 @@ const SignUp = () => {
               disabled={isEmailOtpSent}
               placeholder="Email Address*"
             />
-            {emailOtpMessage && (
-              <div className="success-message">{emailOtpMessage}</div>
-            )}
             {!isEmailOtpSent && isEmailValid && (
               <button type="button" className="otp_button" onClick={sendEmailOtp}>
                 Get OTP
@@ -113,7 +211,13 @@ const SignUp = () => {
                   value={emailOtp}
                   onChange={(e) => setEmailOtp(e.target.value)}
                   placeholder="Enter Email OTP"
+                  id='emailOtpInput'
                 />
+                {emailOtp.length===6 && (
+                  <button type="button" className="otp_button" id='emailVerify' onClick={verifyOtp} style={{whiteSpace: 'noWrap'}}>
+                    Verify OTP
+                  </button>
+            )}
               </div>
             </>
           )}
@@ -125,11 +229,8 @@ const SignUp = () => {
               onChange={(e) => setMobile(e.target.value)}
               placeholder="Mobile Number*"
             />
-            {mobileOtpMessage && (
-              <div className="success-message">{mobileOtpMessage}</div>
-            )}
             {!isMobileOtpSent && isMobileValid && (
-              <button type="button" className="otp_button" onClick={sendMobileOtp}>
+              <button type="button"  className="otp_button" onClick={sendMobileOtp}>
                 Get OTP
               </button>
             )}
@@ -143,7 +244,13 @@ const SignUp = () => {
                   value={mobileOtp}
                   onChange={(e) => setMobileOtp(e.target.value)}
                   placeholder="Enter Mobile OTP"
+                  id='mobileOtpInput'
                 />
+                {mobileOtp.length===6 && (
+                  <button type="button" className="otp_button" id='mobileVerify' onClick={verifyMobileOtp} style={{whiteSpace: 'noWrap'}}>
+                    Verify OTP
+                  </button>
+            )}
               </div>
             </>
           )}
@@ -157,14 +264,14 @@ const SignUp = () => {
             />
           </div>
 
-          <button  type="submit" disabled={!isFormValid}>
+          <button  type="submit" disabled={!isFormValid} onClick={signup}>
             Signup
           </button>
           <p>
             Already have an account? <RouterLink to="/login">Login</RouterLink>
           </p>
         </form>
-      )}
+     
     </div>
   );
 };

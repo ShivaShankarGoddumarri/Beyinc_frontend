@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import "./Login.css";
+import { ApiServices } from "../../Services/ConfigurationServices";
+import { useDispatch } from "react-redux";
+import { setToast } from "../../redux/AuthReducers/AuthReducer";
+import { ToastColors } from "../Toast/ToastColors";
 
 const Login = () => {
   const [loginType, setLoginType] = useState("email");
@@ -10,35 +14,20 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [otpVisible, setOtpVisible] = useState(false);
   const [isMobileValid, setIsMobileValid] = useState(false);
-  const [mobileOtp, setMobileOtp] = useState("");
+  const [mobileVerified, setmobileVerified] = useState(false);
 
-  const [isMobileOtpSent, setIsMobileOtpSent] = useState(false);
-  const [mobileOtpMessage, setMobileOtpMessage] = useState("");
 
-  const isEmailValid = /[a-z]+@gmail.com/.test(email);
+
+  const isEmailValid = /[a-zA-Z0-9]+@gmail.com/.test(email);
   const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
-  const isMobileOtpValid = isNaN(mobileOtp) === false && mobileOtp.length === 4;
 
   const isFormValid =
     (loginType === "email" && isEmailValid && isPasswordValid) ||
-    (loginType === "mobile" && isMobileValid && isPasswordValid && isMobileOtpValid);
+    (loginType === "mobile" && mobileVerified && isPasswordValid);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleLogin = () => {
-    if (isFormValid) {
-      navigate('/Home');
-    } else {
-      alert("Invalid login credentials");
-    }
-  };
-
-  useEffect(() => {
-    if (isMobileOtpSent) {
-      setMobileOtpMessage("Mobile OTP sent successfully.");
-      setTimeout(() => setMobileOtpMessage(""), 5000);
-    }
-  }, [isMobileOtpSent]);
 
   const handleLoginTypeChange = (type) => {
     setLoginType(type);
@@ -48,7 +37,6 @@ const Login = () => {
     setOtp("");
     setOtpVisible(false);
     setIsMobileValid(false);
-    setMobileOtp(""); // Reset mobile OTP when login type changes
   };
 
   const handleGetOtp = () => {
@@ -60,27 +48,96 @@ const Login = () => {
     setIsMobileValid(/^[0-9]{10}$/.test(value));
   };
 
-  const handleFormSubmit = (e) => {
+  const verifyMobileOtp = async (e)=>{
     e.preventDefault();
+    setmobileVerified(true)
+    document.getElementById('mobileVerify').style.display = 'none'
 
-    if (
-      (loginType === "email" && isEmailValid && isPasswordValid) ||
-      (loginType === "mobile" && isMobileValid && isPasswordValid && isMobileOtpValid)
-    ) {
-      // If using mobile login, setMobileOtp here (assuming you want to store the entered OTP)
-      if (loginType === "mobile") {
-        setMobileOtp(otp);
-      }
+    // await ApiServices.verifyOtp({
+    //   "email": email,
+    //   "otp": otp
+    // }).then((res)=>{
+    //   dispatch(setToast({
+    //     message: 'Email verified successfully !',
+    //     bgColor: ToastColors.success,
+    //     visibile: 'yes'
+    //   }))
+    // }).catch(err=>{
+    //   dispatch(setToast({
+    //     message: 'OTP Entered Wrong',
+    //     bgColor: ToastColors.failure,
+    //     visibile: 'yes'
+    //   }))
+    // })
+    // setTimeout(()=>{
+    //   dispatch(setToast({
+    //     message: '',
+    //     bgColor: '',
+    //     visibile: 'no'
+    //   }))
+    // }, 4000)
+  }
 
-      navigate('/Home');
-    } else {
-      alert("Invalid login credentials");
+  const login = async (e) => {
+    e.preventDefault();
+    const obj = {
+      "email": email,
+      "password": password,
     }
-  };
+    await ApiServices.login(obj).then((res)=>{
+      dispatch(setToast({
+        message: 'User Logged In Successfully !',
+        bgColor: ToastColors.success,
+        visibile: 'yes'
+      }))
+      navigate('/')
+    }).catch(err=>{
+      dispatch(setToast({
+        message: err.response.data.message,
+        bgColor: ToastColors.failure,
+        visibile: 'yes'
+      }))
+    })
+    setTimeout(()=>{
+      dispatch(setToast({
+        message: '',
+        bgColor: '',
+        visibile: 'no'
+      }))
+    }, 4000)
+  }
 
+  const mobileLogin = async (e) =>{
+    e.preventDefault();
+    const obj = {
+      "phone": mobile,
+      "password": password,
+    }
+    await ApiServices.mobileLogin(obj).then((res)=>{
+      dispatch(setToast({
+        message: 'User Logged In Successfully !',
+        bgColor: ToastColors.success,
+        visibile: 'yes'
+      }))
+      navigate('/')
+    }).catch(err=>{
+      dispatch(setToast({
+        message: err.response.data.message,
+        bgColor: ToastColors.failure,
+        visibile: 'yes'
+      }))
+    })
+    setTimeout(()=>{
+      dispatch(setToast({
+        message: '',
+        bgColor: '',
+        visibile: 'no'
+      }))
+    }, 4000)
+  }
   return (
     <div className="form-container">
-      <form className="form" onSubmit={handleFormSubmit}>
+      <form className="form">
         <center>
           <h2>Login</h2>
           <p>Log in now to get full access.</p>
@@ -135,11 +192,22 @@ const Login = () => {
                   placeholder="Enter OTP"
                   onChange={(e) => setOtp(e.target.value)}
                 />
+                 {otp.length===6 && (
+                  <button type="button" className="otp_button" id='mobileVerify' onClick={verifyMobileOtp} style={{whiteSpace: 'noWrap'}}>
+                    Verify OTP
+                  </button>
+                )}
               </>
             )}
+            {mobileVerified && (<input
+              type="password"
+              value={password}
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />)}
           </>
         )}
-        <button type="submit" disabled={!isFormValid}>
+        <button type="submit" disabled={!isFormValid} className='submitBtn' onClick={loginType === "email" ? login : mobileLogin}>
           Login
         </button>
         <p>
