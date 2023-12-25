@@ -10,7 +10,6 @@ import { ApiServices } from "../../Services/ConfigurationServices";
 import { useNavigate } from "react-router-dom/dist";
 
 const SignUp = () => {
-
   const [inputs, setInputs] = useState({
     email: null,
     emailOtp: null,
@@ -25,26 +24,52 @@ const SignUp = () => {
     isEmailValid: null,
     isMobileValid: null,
     isNameValid: null,
-    isPasswordValid: null
-  })
+    isPasswordValid: null,
+  });
 
-  const {email, emailOtp, mobile, mobileOtp, name, password, isEmailOtpSent, isMobileOtpSent, emailVerified, mobileVerified, isEmailValid, isMobileValid, isNameValid, isPasswordValid} = inputs;
-  const handleChanges = (e) =>{
-    setInputs((prev)=>({...prev, [e.target.name]: e.target.value}))
-    if(e.target.name==='name'){
-      setInputs((prev)=>({...prev, isNameValid: e.target.value !==''}))
+  const {
+    email,
+    emailOtp,
+    mobile,
+    mobileOtp,
+    name,
+    password,
+    isEmailOtpSent,
+    isMobileOtpSent,
+    emailVerified,
+    mobileVerified,
+    isEmailValid,
+    isMobileValid,
+    isNameValid,
+    isPasswordValid,
+  } = inputs;
+  const handleChanges = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (e.target.name === "name") {
+      setInputs((prev) => ({ ...prev, isNameValid: e.target.value !== "" }));
     }
-    if(e.target.name==='email'){
-      setInputs((prev)=>({...prev, isEmailValid: /[a-zA-Z0-9]+@gmail.com/.test(e.target.value)}))
+    if (e.target.name === "email") {
+      setInputs((prev) => ({
+        ...prev,
+        isEmailValid: /[a-zA-Z0-9]+@gmail.com/.test(e.target.value),
+      }));
     }
-    if(e.target.name==='password'){
-      setInputs((prev)=>({...prev, isPasswordValid: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(e.target.value)}))
+    if (e.target.name === "password") {
+      setInputs((prev) => ({
+        ...prev,
+        isPasswordValid:
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+            e.target.value
+          ),
+      }));
     }
-    if(e.target.name==='mobile'){
-      setInputs((prev)=>({...prev, isMobileValid: /^[0-9]{10}$/.test(e.target.value)}))
+    if (e.target.name === "mobile") {
+      setInputs((prev) => ({
+        ...prev,
+        isMobileValid: /^[0-9]{10}$/.test(e.target.value),
+      }));
     }
-  }
-
+  };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,24 +78,29 @@ const SignUp = () => {
     e.preventDefault();
     e.target.disabled = true;
     await ApiServices.sendOtp({
-      "to": email,
-      "subject": "Email Verification"
-    }).then((res)=>{
-      dispatch(setToast({
-        message: 'OTP sent successfully !',
-        bgColor: ToastColors.success,
-        visibile: 'yes'
-      }))
-      // setIsEmailOtpSent(true);
-      setInputs((prev)=>({...prev, isEmailOtpSent: true}))
-
-    }).catch(err=>{
-      dispatch(setToast({
-        message: 'OTP sent failed !',
-        bgColor: ToastColors.failure,
-        visibile: 'yes'
-      }))
+      to: email,
+      subject: "Email Verification",
     })
+      .then((res) => {
+        dispatch(
+          setToast({
+            message: "OTP sent successfully !",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        // setIsEmailOtpSent(true);
+        setInputs((prev) => ({ ...prev, isEmailOtpSent: true }));
+      })
+      .catch((err) => {
+        dispatch(
+          setToast({
+            message: "OTP sent failed !",
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+      });
     setTimeout(() => {
       dispatch(
         setToast({
@@ -85,26 +115,31 @@ const SignUp = () => {
   const verifyOtp = async (e) => {
     e.preventDefault();
     await ApiServices.verifyOtp({
-      "email": email,
-      "otp": emailOtp
-    }).then((res)=>{
-      dispatch(setToast({
-        message: 'Email verified successfully !',
-        bgColor: ToastColors.success,
-        visibile: 'yes'
-      }))
-      document.getElementById('emailVerify').style.display = 'none'
-      document.getElementById('emailOtpInput').disabled = true;
-      // setemailVerified(true);
-      setInputs((prev)=>({...prev, emailVerified: true}))
-
-    }).catch(err=>{
-      dispatch(setToast({
-        message: 'Incorrect OTP',
-        bgColor: ToastColors.failure,
-        visibile: 'yes'
-      }))
+      email: email,
+      otp: emailOtp,
     })
+      .then((res) => {
+        dispatch(
+          setToast({
+            message: "Email verified successfully !",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        document.getElementById("emailVerify").style.display = "none";
+        document.getElementById("emailOtpInput").disabled = true;
+        // setemailVerified(true);
+        setInputs((prev) => ({ ...prev, emailVerified: true }));
+      })
+      .catch((err) => {
+        dispatch(
+          setToast({
+            message: "Incorrect OTP",
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+      });
     setTimeout(() => {
       dispatch(
         setToast({
@@ -119,26 +154,31 @@ const SignUp = () => {
   const verifyMobileOtp = async (e) => {
     e.preventDefault();
     await ApiServices.verifyOtp({
-      "email": email,
-      "otp": emailOtp
-    }).then((res)=>{
-      dispatch(setToast({
-        message: 'Mobile verified successfully !',
-        bgColor: ToastColors.success,
-        visibile: 'yes'
-      }))
-      document.getElementById('mobileVerify').style.display = 'none'
-      document.getElementById('mobileOtpInput').disabled = true;
-      // setmobileVerified(true);
-      setInputs((prev)=>({...prev, mobileVerified: true}))
-
-    }).catch(err=>{
-      dispatch(setToast({
-        message: 'Incorrect OTP',
-        bgColor: ToastColors.failure,
-        visibile: 'yes'
-      }))
+      email: email,
+      otp: emailOtp,
     })
+      .then((res) => {
+        dispatch(
+          setToast({
+            message: "Mobile verified successfully !",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        document.getElementById("mobileVerify").style.display = "none";
+        document.getElementById("mobileOtpInput").disabled = true;
+        // setmobileVerified(true);
+        setInputs((prev) => ({ ...prev, mobileVerified: true }));
+      })
+      .catch((err) => {
+        dispatch(
+          setToast({
+            message: "Incorrect OTP",
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+      });
     setTimeout(() => {
       dispatch(
         setToast({
@@ -195,8 +235,7 @@ const SignUp = () => {
     e.target.disabled = true;
     setTimeout(() => {
       // setIsMobileOtpSent(true);
-      setInputs((prev)=>({...prev, isMobileOtpSent: true}))
-
+      setInputs((prev) => ({ ...prev, isMobileOtpSent: true }));
     }, 1000);
   };
 
@@ -222,35 +261,58 @@ const SignUp = () => {
           </p>
           <img src="investment.png" alt="Your Alt Text" />
         </center>
-      
       </div>
 
       {/* Form Container */}
       <div className="registration-form-container">
         <form>
           <center>
-          <h1>Signup</h1>
+            <h1>Signup</h1>
           </center>
           <div className="input-container">
             <input
-              type="text" className={isNameValid!==null && (isNameValid? 'valid': 'invalid')}
+              type="text"
+              className={
+                isNameValid !== null && (isNameValid ? "valid" : "invalid")
+              }
               value={name}
-              name='name'
+              name="name"
               onChange={handleChanges}
               placeholder="Full Name*"
             />
           </div>
+          <input
+            type="radio"
+            name="role"
+            value="Entrepreneur"
+            id="Entrepreneur"
+          />
+          <label for="Entrepreneur">Entrepreneur</label>
+          <input type="radio" name="role" value="Mentor" id="Mentor" />
+          <label for="Mentor">Mentor</label>
+          <input type="radio" name="role" value="Investor" id="Investor" />
+          <span for="Investor">Investor</span>
 
           <div className="input-container">
             <input
-              type="email" className={isEmailValid!==null && (isEmailValid? 'valid': 'invalid')}
+              type="email"
+              className={
+                isEmailValid !== null && (isEmailValid ? "valid" : "invalid")
+              }
               value={email}
-              name='email'
+              name="email"
               onChange={handleChanges}
               disabled={emailVerified}
               placeholder="Email Address*"
             />
-            {emailVerified==true && <img src="checked.png" height={20}  alt="Your Alt Text" className='successIcons'/>}
+            {emailVerified == true && (
+              <img
+                src="checked.png"
+                height={20}
+                alt="Your Alt Text"
+                className="successIcons"
+              />
+            )}
             {!isEmailOtpSent && isEmailValid && (
               <button
                 type="button"
@@ -262,20 +324,29 @@ const SignUp = () => {
             )}
           </div>
 
-          {isEmailOtpSent && emailVerified!==true && (
+          {isEmailOtpSent && emailVerified !== true && (
             <>
               <div className="input-container">
                 <input
-                  type="text" className={emailOtp!==null && (emailOtp.length===6? 'valid': 'invalid')}
+                  type="text"
+                  className={
+                    emailOtp !== null &&
+                    (emailOtp.length === 6 ? "valid" : "invalid")
+                  }
                   value={emailOtp}
-                  name='emailOtp'
+                  name="emailOtp"
                   onChange={handleChanges}
                   placeholder="Enter Email OTP"
-                  id='emailOtpInput'
-                  
+                  id="emailOtpInput"
                 />
-                {emailOtp!==null && emailOtp.length===6 && (
-                  <button type="button" className="otp_button" id='emailVerify' onClick={verifyOtp} style={{whiteSpace: 'noWrap'}}>
+                {emailOtp !== null && emailOtp.length === 6 && (
+                  <button
+                    type="button"
+                    className="otp_button"
+                    id="emailVerify"
+                    onClick={verifyOtp}
+                    style={{ whiteSpace: "noWrap" }}
+                  >
                     Verify OTP
                   </button>
                 )}
@@ -285,13 +356,24 @@ const SignUp = () => {
 
           <div className="input-container">
             <input
-              type="text" className={mobile!==null && (mobile.length===10? 'valid': 'invalid')}
-              name='mobile'
-              value={mobile} disabled={mobileVerified}
+              type="text"
+              className={
+                mobile !== null && (mobile.length === 10 ? "valid" : "invalid")
+              }
+              name="mobile"
+              value={mobile}
+              disabled={mobileVerified}
               onChange={handleChanges}
               placeholder="Mobile Number*"
             />
-            {mobileVerified==true && <img src="checked.png" height={20}  alt="Your Alt Text" className='successIcons'/>}
+            {mobileVerified == true && (
+              <img
+                src="checked.png"
+                height={20}
+                alt="Your Alt Text"
+                className="successIcons"
+              />
+            )}
 
             {!isMobileOtpSent && isMobileValid && (
               <button
@@ -308,15 +390,25 @@ const SignUp = () => {
             <>
               <div className="input-container">
                 <input
-                  type="text"  className={mobileOtp!==null && (mobileOtp.length===6? 'valid': 'invalid')}
-                  name='mobileOtp'
+                  type="text"
+                  className={
+                    mobileOtp !== null &&
+                    (mobileOtp.length === 6 ? "valid" : "invalid")
+                  }
+                  name="mobileOtp"
                   value={mobileOtp}
                   onChange={handleChanges}
                   placeholder="Enter Mobile OTP"
-                  id='mobileOtpInput'
+                  id="mobileOtpInput"
                 />
-                {mobileOtp!==null && mobileOtp.length===6 && (
-                  <button type="button" className="otp_button" id='mobileVerify' onClick={verifyMobileOtp} style={{whiteSpace: 'noWrap'}}>
+                {mobileOtp !== null && mobileOtp.length === 6 && (
+                  <button
+                    type="button"
+                    className="otp_button"
+                    id="mobileVerify"
+                    onClick={verifyMobileOtp}
+                    style={{ whiteSpace: "noWrap" }}
+                  >
                     Verify OTP
                   </button>
                 )}
@@ -326,8 +418,12 @@ const SignUp = () => {
 
           <div className="input-container">
             <input
-              type="password" className={isPasswordValid!==null && (isPasswordValid? 'valid': 'invalid')}
-              name='password'
+              type="password"
+              className={
+                isPasswordValid !== null &&
+                (isPasswordValid ? "valid" : "invalid")
+              }
+              name="password"
               value={password}
               onChange={handleChanges}
               placeholder="Create Password*"
@@ -338,8 +434,20 @@ const SignUp = () => {
             Signup
           </button>
           <p>
-            Already have an account? <RouterLink to="/login" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8',   transition: 'color 0.3s' }}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
-    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Login</RouterLink>
+            Already have an account?{" "}
+            <RouterLink
+              to="/login"
+              style={{
+                textDecoration: "none",
+                fontWeight: "600",
+                color: "#1e4bb8",
+                transition: "color 0.3s",
+              }}
+              onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+              onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+            >
+              Login
+            </RouterLink>
           </p>
         </form>
       </div>
