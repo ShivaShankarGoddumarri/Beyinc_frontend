@@ -195,7 +195,7 @@ const ResetPassword = () => {
       <form className="form">
         <center>
           <h2>Reset Password</h2>
-          <p>Reset your password either email</p>
+          <p>Reset your password with email</p>
         </center>
         {/* <div className="login-type-toggle">
           <span

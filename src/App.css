@@ -170,3 +170,11 @@ button:hover {
     border-radius: 3px;
 }
 
+
+@media (max-width: 768px) { 
+    input {
+        width: 85% !important;
+    }
+
+}
+
