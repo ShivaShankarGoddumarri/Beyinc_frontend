@@ -16,6 +16,7 @@ const SignUp = () => {
     mobile: null,
     mobileOtp: null,
     name: null,
+    role: null,
     password: null,
     isMobileOtpSent: null,
     isEmailOtpSent: null,
@@ -33,6 +34,7 @@ const SignUp = () => {
     mobile,
     mobileOtp,
     name,
+    role,
     password,
     isEmailOtpSent,
     isMobileOtpSent,
@@ -198,6 +200,7 @@ const SignUp = () => {
       password: password,
       userName: name,
       phone: mobile,
+      role: role
     })
       .then((res) => {
         dispatch(
@@ -247,6 +250,11 @@ const SignUp = () => {
     isNameValid &&
     isPasswordValid;
 
+
+  const handleChangeRadio = (e) => {
+    setInputs((prev)=>({...prev, role: e.target.value}))
+  }
+
   return (
     <div className="registration-container">
       {/* Image Container */}
@@ -281,17 +289,25 @@ const SignUp = () => {
               placeholder="Full Name*"
             />
           </div>
-          <input
-            type="radio"
-            name="role"
-            value="Entrepreneur"
-            id="Entrepreneur"
-          />
-          <label for="Entrepreneur">Entrepreneur</label>
-          <input type="radio" name="role" value="Mentor" id="Mentor" />
-          <label for="Mentor">Mentor</label>
-          <input type="radio" name="role" value="Investor" id="Investor" />
-          <span for="Investor">Investor</span>
+          <div className="input-container" style={{ display: "flex", justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center'  }}>
+              <input
+                type="radio"
+                name="role"
+                value="Entrepreneur"
+                id="Entrepreneur" onClick={handleChangeRadio}
+              />
+              <label for="Entrepreneur">Entrepreneur</label>
+            </div>
+            <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center'  }}>
+              <input type="radio" name="role" value="Mentor" id="Mentor" onClick={handleChangeRadio} />
+              <label for="Mentor">Mentor</label>
+            </div>
+            <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center'  }}>
+              <input type="radio" name="role" value="Investor" id="Investor" onClick={handleChangeRadio}/>
+              <label for="Investor">Investor</label>
+            </div>
+          </div>
 
           <div className="input-container">
             <input
@@ -386,7 +402,7 @@ const SignUp = () => {
             )}
           </div>
 
-          {isMobileOtpSent && (
+          {isMobileOtpSent && mobileVerified !== true &&(
             <>
               <div className="input-container">
                 <input

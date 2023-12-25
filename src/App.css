@@ -185,4 +185,12 @@ button:hover {
 }
 
 
+input[type='radio'] {
+    width: 30px !important;
+}
+input[type='radio'] + label {
+    font-weight: 400;
+    font-size: 15px;
+    margin-top: -3px;
+}
 
