@@ -47,7 +47,7 @@ const SignUp = () => {
       setIsEmailOtpSent(true);
     }).catch(err=>{
       dispatch(setToast({
-        message: 'OTP sent successfully !',
+        message: 'OTP sent failed !',
         bgColor: ToastColors.failure,
         visibile: 'yes'
       }))
