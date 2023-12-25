@@ -247,9 +247,10 @@ const SignUp = () => {
               value={email}
               name='email'
               onChange={handleChanges}
-              disabled={isEmailOtpSent}
+              disabled={emailVerified}
               placeholder="Email Address*"
             />
+            {emailVerified==true && <img src="checked.png" height={20}  alt="Your Alt Text" className='successIcons'/>}
             {!isEmailOtpSent && isEmailValid && (
               <button
                 type="button"
@@ -261,7 +262,7 @@ const SignUp = () => {
             )}
           </div>
 
-          {isEmailOtpSent && (
+          {isEmailOtpSent && emailVerified!==true && (
             <>
               <div className="input-container">
                 <input
@@ -286,10 +287,12 @@ const SignUp = () => {
             <input
               type="text" className={mobile!==null && (mobile.length===10? 'valid': 'invalid')}
               name='mobile'
-              value={mobile}
+              value={mobile} disabled={mobileVerified}
               onChange={handleChanges}
               placeholder="Mobile Number*"
             />
+            {mobileVerified==true && <img src="checked.png" height={20}  alt="Your Alt Text" className='successIcons'/>}
+
             {!isMobileOtpSent && isMobileValid && (
               <button
                 type="button"

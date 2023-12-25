@@ -170,6 +170,12 @@ button:hover {
     border-radius: 3px;
 }
 
+.successIcons{
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+
 
 @media (max-width: 768px) { 
     input {
@@ -177,4 +183,6 @@ button:hover {
     }
 
 }
+
+
 
