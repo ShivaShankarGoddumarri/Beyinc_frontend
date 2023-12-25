@@ -138,6 +138,7 @@ const SignUp = () => {
       }))
       navigate('/login')
     }).catch(err=>{
+      e.target.disabled=false
       dispatch(setToast({
         message: err.response.data.message,
         bgColor: ToastColors.failure,
@@ -217,6 +218,7 @@ const SignUp = () => {
                   onChange={(e) => setEmailOtp(e.target.value)}
                   placeholder="Enter Email OTP"
                   id='emailOtpInput'
+                  style={{border: `2px solid ${emailOtp ==''? 'none' : emailOtp.length!==6?   'red': 'green'}`}}
                   
                 />
                 {emailOtp.length===6 && (
@@ -252,6 +254,7 @@ const SignUp = () => {
                   onChange={(e) => setMobileOtp(e.target.value)}
                   placeholder="Enter Mobile OTP"
                   id='mobileOtpInput'
+                  style={{border: `2px solid ${mobileOtp ==''? 'none' : mobileOtp.length!==6?   'red': 'green'}`}}
                 />
                 {mobileOtp.length===6 && (
                   <button type="button" className="otp_button" id='mobileVerify' onClick={verifyMobileOtp} style={{whiteSpace: 'noWrap'}}>

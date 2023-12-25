@@ -171,12 +171,14 @@ const Login = () => {
               value={email}
               placeholder="Email Address"
               onChange={(e) => setEmail(e.target.value)}
+              style={{border: `2px solid ${email==''? 'none' : isEmailValid? 'green': 'red'}`}}
             />
             <input
               type="password"
               value={password}
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
+              style={{border: `2px solid ${password==''? 'none'  : isPasswordValid? 'green': 'red'}`}}
             />
           </>
         ) : (
@@ -186,6 +188,7 @@ const Login = () => {
               value={mobile}
               placeholder="Mobile Number"
               onChange={(e) => handleMobileChange(e.target.value)}
+              style={{border: `2px solid ${mobile==''? 'none'  : isMobileValid? 'green': 'red'}`}}
             />
             {isMobileValid && !otpVisible && (
               <button type="button" className="otp_button" onClick={handleGetOtp}>
@@ -199,6 +202,7 @@ const Login = () => {
                   value={otp}
                   placeholder="Enter OTP"
                   onChange={(e) => setOtp(e.target.value)}
+                  style={{border: `2px solid ${otp ==''? 'none' : otp.length!==6?   'red': 'green'}`}}
                 />
                  {otp.length===6 && (
                   <button type="button" className="otp_button" id='mobileVerify' onClick={verifyMobileOtp} style={{whiteSpace: 'noWrap'}}>
@@ -212,6 +216,7 @@ const Login = () => {
               value={password}
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
+              style={{border: `2px solid ${password==''? 'none'  : isPasswordValid? 'green': 'red'}`}}
             />)}
           </>
         )}
