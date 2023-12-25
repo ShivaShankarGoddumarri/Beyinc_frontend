@@ -170,11 +170,27 @@ button:hover {
     border-radius: 3px;
 }
 
+.successIcons{
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+
 
 @media (max-width: 768px) { 
     input {
         width: 85% !important;
     }
 
+}
+
+
+input[type='radio'] {
+    width: 30px !important;
+}
+input[type='radio'] + label {
+    font-weight: 400;
+    font-size: 15px;
+    margin-top: -3px;
 }
 

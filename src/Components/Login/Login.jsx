@@ -67,7 +67,7 @@ const Login = () => {
 
   const isFormValid =
     (loginType === "email" && isEmailValid && isPasswordValid) ||
-    (loginType === "mobile" && mobileVerified && isPasswordValid);
+    (loginType === "mobile" && mobileVerified);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -155,9 +155,14 @@ const Login = () => {
         navigate("/");
       })
       .catch((err) => {
+        e.target.disabled = false;
+
         dispatch(
           setToast({
-            message: err.response.data.message,
+            message:
+              err?.response?.data?.message !== ""
+                ? err?.response?.data?.message
+                : "Error Occured",
             bgColor: ToastColors.failure,
             visibile: "yes",
           })
@@ -195,6 +200,7 @@ const Login = () => {
         navigate("/");
       })
       .catch((err) => {
+        e.target.disabled = false;
         dispatch(
           setToast({
             message: err.response.data.message,
@@ -261,17 +267,30 @@ const Login = () => {
           </>
         ) : (
           <>
-            <input
-              type="text"
-              value={mobile}
-              className={
-                isMobileValid !== null && (isMobileValid ? "valid" : "invalid")
-              }
-              placeholder="Mobile Number"
-              autoComplete="off"
-              name="mobile"
-              onChange={handleChanges}
-            />
+            <div className="input-container">
+              <input
+                type="text"
+                value={mobile}
+                className={
+                  isMobileValid !== null &&
+                  (isMobileValid ? "valid" : "invalid")
+                }
+                disabled={mobileVerified}
+                placeholder="Mobile Number"
+                autoComplete="off"
+                name="mobile"
+                onChange={handleChanges}
+              />
+              {mobileVerified == true && (
+                <img
+                  src="checked.png"
+                  height={20} style={{right: '20px'}}
+                  alt="Your Alt Text"
+                  className="successIcons"
+                />
+              )}
+            </div>
+
             {isMobileValid && !otpVisible && (
               <button
                 type="button"
@@ -281,7 +300,7 @@ const Login = () => {
                 Get OTP
               </button>
             )}
-            {otpVisible && (
+            {otpVisible && mobileVerified !==true && (
               <>
                 <input
                   type="text"
@@ -307,7 +326,7 @@ const Login = () => {
                 )}
               </>
             )}
-            {mobileVerified && (
+            {/* {mobileVerified && (
               <input
                 type="password"
                 value={password}
@@ -319,7 +338,7 @@ const Login = () => {
                 placeholder="Password"
                 onChange={handleChanges}
               />
-            )}
+            )} */}
           </>
         )}
         <button
@@ -331,12 +350,33 @@ const Login = () => {
           Login
         </button>
         <p>
-          Don't have an account? <RouterLink to="/signup" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8'}}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
-    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Sign Up</RouterLink>
+          Don't have an account?{" "}
+          <RouterLink
+            to="/signup"
+            style={{
+              textDecoration: "none",
+              fontWeight: "600",
+              color: "#1e4bb8",
+            }}
+            onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+            onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+          >
+            Sign Up
+          </RouterLink>
         </p>
         <p>
-          <RouterLink to="/forgotpassword" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8'}}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
-    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Forgot Password?</RouterLink>
+          <RouterLink
+            to="/forgotpassword"
+            style={{
+              textDecoration: "none",
+              fontWeight: "600",
+              color: "#1e4bb8",
+            }}
+            onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+            onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+          >
+            Forgot Password?
+          </RouterLink>
         </p>
       </form>
 

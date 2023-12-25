@@ -213,7 +213,8 @@ const ResetPassword = () => {
         </div> */}
         {loginType === "email" ? (
           <>
-            <input
+                    <div className="input-container">
+                    <input
               type="text"
               name="email"
               className={
@@ -221,9 +222,14 @@ const ResetPassword = () => {
               }
               value={email}
               placeholder="Email Address"
-              disabled={otpVisible}
+              disabled={emailVerified}
               onChange={handleChanges}
             />
+                        {emailVerified==true && <img src="checked.png" height={20}  alt="Your Alt Text" className='successIcons'/>}
+
+                    </div>
+
+           
             {isEmailValid && !otpVisible && (
               <button
                 type="button"
@@ -233,7 +239,7 @@ const ResetPassword = () => {
                 Get OTP
               </button>
             )}
-            {otpVisible && (
+            {otpVisible && emailVerified!==true && (
               <>
                 <input
                   type="text"
@@ -257,12 +263,17 @@ const ResetPassword = () => {
           </>
         ) : (
           <>
-            <input
-              type="text"
+           <div className="input-container">
+           <input
+              type="text" disabled={mobileVerified}
               value={mobile}
               placeholder="Mobile Number"
               onChange={(e) => handleMobileChange(e.target.value)}
             />
+            {mobileVerified==true && <img src="checked.png" height={20}  alt="Your Alt Text" className='successIcons'/>}
+
+           </div>
+            
             {isMobileValid && !otpVisible && (
               <button
                 type="button"
