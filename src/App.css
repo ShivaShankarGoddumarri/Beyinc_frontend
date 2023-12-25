@@ -96,6 +96,24 @@ input {
     border-radius: 3px;
 }
 
+input.valid{
+    width: 330px !important; 
+    outline: 0;
+    padding: 15px;
+    margin-bottom: 5px; 
+    border: 2px solid green;
+    border-radius: 3px;
+}
+
+input.invalid{
+    width: 330px !important; 
+    outline: 0;
+    padding: 15px;
+    margin-bottom: 5px; 
+    border: 2px solid red;
+    border-radius: 3px;
+}
+
 .validation-icon {
     position: absolute;
     top: 50%;

@@ -8,19 +8,44 @@ import { ToastColors } from "../Toast/ToastColors";
 import axiosInstance from "../axiosInstance";
 
 const Login = () => {
+
+  const [inputs, setInputs] = useState({
+    email: null,
+    mobile: null,
+    mobileOtp: null,
+    name: null,
+    password: null,
+    isMobileOtpSent: null,
+    mobileVerified: null,
+    isEmailValid: null,
+    isMobileValid: null,
+    isNameValid: null,
+    isPasswordValid: null
+  })
+
+  const {email, mobile, password,  mobileOtp, mobileVerified, isEmailValid, isMobileValid, isPasswordValid} = inputs;
+  const handleChanges = (e) =>{
+    setInputs((prev)=>({...prev, [e.target.name]: e.target.value}))
+    if(e.target.name==='name'){
+      setInputs((prev)=>({...prev, isNameValid: e.target.value !==''}))
+    }
+    if(e.target.name==='email'){
+      setInputs((prev)=>({...prev, isEmailValid: /[a-zA-Z0-9]+@gmail.com/.test(e.target.value)}))
+    }
+    if(e.target.name==='password'){
+      setInputs((prev)=>({...prev, isPasswordValid: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(e.target.value)}))
+    }
+    if(e.target.name==='mobile'){
+      setInputs((prev)=>({...prev, isMobileValid: /^[0-9]{10}$/.test(e.target.value)}))
+    }
+  }
   const [loginType, setLoginType] = useState("email");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [otp, setOtp] = useState("");
   const [otpVisible, setOtpVisible] = useState(false);
-  const [isMobileValid, setIsMobileValid] = useState(false);
-  const [mobileVerified, setmobileVerified] = useState(false);
 
 
 
-  const isEmailValid = /[a-zA-Z0-9]+@gmail.com/.test(email);
-  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+  // const isEmailValid = /[a-zA-Z0-9]+@gmail.com/.test(email);
+  // const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
   const isFormValid =
     (loginType === "email" && isEmailValid && isPasswordValid) ||
@@ -32,27 +57,37 @@ const Login = () => {
 
   const handleLoginTypeChange = (type) => {
     setLoginType(type);
-    setEmail("");
-    setPassword("");
-    setMobile("");
-    setOtp("");
+    setInputs({email: null,
+      emailOtp: null,
+      mobile: null,
+      mobileOtp: null,
+      name: null,
+      password: null,
+      isMobileOtpSent: null,
+      isEmailOtpSent: null,
+      emailVerified: null,
+      mobileVerified: null,
+      isEmailValid: null,
+      isMobileValid: null,
+      isNameValid: null,
+      isPasswordValid: null})
     setOtpVisible(false);
-    setIsMobileValid(false);
   };
 
   const handleGetOtp = () => {
     setOtpVisible(true);
   };
 
-  const handleMobileChange = (value) => {
-    setMobile(value);
-    setIsMobileValid(/^[0-9]{10}$/.test(value));
-  };
+  // const handleMobileChange = (value) => {
+  //   setMobile(value);
+  //   setIsMobileValid(/^[0-9]{10}$/.test(value));
+  // };
 
   const verifyMobileOtp = async (e)=>{
     e.preventDefault();
     e.target.disabled=true;
-    setmobileVerified(true)
+    // setmobileVerified(true)
+    setInputs((prev)=>({...prev, mobileVerified: true}))
     document.getElementById('mobileVerify').style.display = 'none'
 
     // await ApiServices.verifyOtp({
@@ -168,27 +203,27 @@ const Login = () => {
           <>
             <input
               type="text"
-              value={email}
+              name = 'email'
+              value={email} className={isEmailValid!==null && (isEmailValid? 'valid': 'invalid')}
               placeholder="Email Address"
-              onChange={(e) => setEmail(e.target.value)}
-              style={{border: `2px solid ${email==''? 'none' : isEmailValid? 'green': 'red'}`}}
+              onChange={handleChanges}
             />
             <input
-              type="password"
+              type="password" className={isPasswordValid!==null && (isPasswordValid? 'valid': 'invalid')}
+              name= 'password'
               value={password}
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-              style={{border: `2px solid ${password==''? 'none'  : isPasswordValid? 'green': 'red'}`}}
+              onChange={handleChanges}
             />
           </>
         ) : (
           <>
             <input
               type="text"
-              value={mobile}
-              placeholder="Mobile Number"
-              onChange={(e) => handleMobileChange(e.target.value)}
-              style={{border: `2px solid ${mobile==''? 'none'  : isMobileValid? 'green': 'red'}`}}
+              value={mobile} className={isMobileValid!==null && (isMobileValid? 'valid': 'invalid')}
+              placeholder="Mobile Number" autoComplete = 'off'
+              name = 'mobile'
+              onChange={handleChanges}
             />
             {isMobileValid && !otpVisible && (
               <button type="button" className="otp_button" onClick={handleGetOtp}>
@@ -199,12 +234,12 @@ const Login = () => {
               <>
                 <input
                   type="text"
-                  value={otp}
+                  value={mobileOtp} className={mobileOtp!==null && (mobileOtp.length===6? 'valid': 'invalid')}
                   placeholder="Enter OTP"
-                  onChange={(e) => setOtp(e.target.value)}
-                  style={{border: `2px solid ${otp ==''? 'none' : otp.length!==6?   'red': 'green'}`}}
+                  name='mobileOtp'
+                  onChange={handleChanges}
                 />
-                 {otp.length===6 && (
+                 {mobileOtp!==null && mobileOtp.length===6 && (
                   <button type="button" className="otp_button" id='mobileVerify' onClick={verifyMobileOtp} style={{whiteSpace: 'noWrap'}}>
                     Verify OTP
                   </button>
@@ -213,10 +248,10 @@ const Login = () => {
             )}
             {mobileVerified && (<input
               type="password"
-              value={password}
+              value={password} className={isPasswordValid!==null && (isPasswordValid? 'valid': 'invalid')}
+              name='password'
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-              style={{border: `2px solid ${password==''? 'none'  : isPasswordValid? 'green': 'red'}`}}
+              onChange={handleChanges}
             />)}
           </>
         )}

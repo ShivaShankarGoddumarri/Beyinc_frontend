@@ -3,8 +3,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
+    min-width: 300px;
     position: absolute;
+    line-break: auto;
+    height: auto;
     
     /* margin: auto; */
 }

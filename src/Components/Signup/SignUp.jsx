@@ -10,24 +10,41 @@ import { ApiServices } from "../../Services/ConfigurationServices";
 import { useNavigate } from "react-router-dom/dist";
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [emailOtp, setEmailOtp] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [mobileOtp, setMobileOtp] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
 
-  const [isEmailOtpSent, setIsEmailOtpSent] = useState(false);
-  const [isMobileOtpSent, setIsMobileOtpSent] = useState(false);
+  const [inputs, setInputs] = useState({
+    email: null,
+    emailOtp: null,
+    mobile: null,
+    mobileOtp: null,
+    name: null,
+    password: null,
+    isMobileOtpSent: null,
+    isEmailOtpSent: null,
+    emailVerified: null,
+    mobileVerified: null,
+    isEmailValid: null,
+    isMobileValid: null,
+    isNameValid: null,
+    isPasswordValid: null
+  })
 
-  const [emailVerified, setemailVerified] = useState(false);
-  const [mobileVerified, setmobileVerified] = useState(false);
+  const {email, emailOtp, mobile, mobileOtp, name, password, isEmailOtpSent, isMobileOtpSent, emailVerified, mobileVerified, isEmailValid, isMobileValid, isNameValid, isPasswordValid} = inputs;
+  const handleChanges = (e) =>{
+    setInputs((prev)=>({...prev, [e.target.name]: e.target.value}))
+    if(e.target.name==='name'){
+      setInputs((prev)=>({...prev, isNameValid: e.target.value !==''}))
+    }
+    if(e.target.name==='email'){
+      setInputs((prev)=>({...prev, isEmailValid: /[a-zA-Z0-9]+@gmail.com/.test(e.target.value)}))
+    }
+    if(e.target.name==='password'){
+      setInputs((prev)=>({...prev, isPasswordValid: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(e.target.value)}))
+    }
+    if(e.target.name==='mobile'){
+      setInputs((prev)=>({...prev, isMobileValid: /^[0-9]{10}$/.test(e.target.value)}))
+    }
+  }
 
-  // Validation Part
-  const isEmailValid = /[a-zA-Z0-9]+@gmail.com/.test(email);
-  const isMobileValid = /^[0-9]{10}$/.test(mobile);
-  const isNameValid = name !== "";
-  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,7 +62,9 @@ const SignUp = () => {
         bgColor: ToastColors.success,
         visibile: 'yes'
       }))
-      setIsEmailOtpSent(true);
+      // setIsEmailOtpSent(true);
+      setInputs((prev)=>({...prev, isEmailOtpSent: true}))
+
     }).catch(err=>{
       dispatch(setToast({
         message: 'OTP sent failed !',
@@ -75,7 +94,9 @@ const SignUp = () => {
       }))
       document.getElementById('emailVerify').style.display = 'none'
       document.getElementById('emailOtpInput').disabled = true;
-      setemailVerified(true);
+      // setemailVerified(true);
+      setInputs((prev)=>({...prev, emailVerified: true}))
+
     }).catch(err=>{
       dispatch(setToast({
         message: 'Incorrect OTP',
@@ -105,7 +126,9 @@ const SignUp = () => {
       }))
       document.getElementById('mobileVerify').style.display = 'none'
       document.getElementById('mobileOtpInput').disabled = true;
-      setmobileVerified(true);
+      // setmobileVerified(true);
+      setInputs((prev)=>({...prev, mobileVerified: true}))
+
     }).catch(err=>{
       dispatch(setToast({
         message: 'Incorrect OTP',
@@ -158,7 +181,9 @@ const SignUp = () => {
     e.preventDefault();
     e.target.disabled=true;
     setTimeout(() => {
-      setIsMobileOtpSent(true);
+      // setIsMobileOtpSent(true);
+      setInputs((prev)=>({...prev, isMobileOtpSent: true}))
+
     }, 1000);
   };
 
@@ -185,22 +210,22 @@ const SignUp = () => {
 
           <div className="input-container">
             <input
-              type="text"
+              type="text" className={isNameValid!==null && (isNameValid? 'valid': 'invalid')}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              name='name'
+              onChange={handleChanges}
               placeholder="Full Name*"
-              style={{border: `2px solid ${name==''? 'none'  : isNameValid? 'green': 'red'}`}}
             />
           </div>
 
           <div className="input-container">
             <input
-              type="email"
+              type="email" className={isEmailValid!==null && (isEmailValid? 'valid': 'invalid')}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name='email'
+              onChange={handleChanges}
               disabled={isEmailOtpSent}
               placeholder="Email Address*"
-              style={{border: `2px solid ${email==''? 'none' : isEmailValid? 'green': 'red'}`}}
             />
             {!isEmailOtpSent && isEmailValid && (
               <button type="button" className="otp_button" onClick={sendEmailOtp}>
@@ -213,15 +238,15 @@ const SignUp = () => {
             <>
               <div className="input-container">
                 <input
-                  type="text"
+                  type="text" className={emailOtp!==null && (emailOtp.length===6? 'valid': 'invalid')}
                   value={emailOtp}
-                  onChange={(e) => setEmailOtp(e.target.value)}
+                  name='emailOtp'
+                  onChange={handleChanges}
                   placeholder="Enter Email OTP"
                   id='emailOtpInput'
-                  style={{border: `2px solid ${emailOtp ==''? 'none' : emailOtp.length!==6?   'red': 'green'}`}}
                   
                 />
-                {emailOtp.length===6 && (
+                {emailOtp!==null && emailOtp.length===6 && (
                   <button type="button" className="otp_button" id='emailVerify' onClick={verifyOtp} style={{whiteSpace: 'noWrap'}}>
                     Verify OTP
                   </button>
@@ -232,11 +257,11 @@ const SignUp = () => {
 
           <div className="input-container">
             <input
-              type="text"
+              type="text" className={mobile!==null && (mobile.length===10? 'valid': 'invalid')}
+              name='mobile'
               value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
+              onChange={handleChanges}
               placeholder="Mobile Number*"
-              style={{border: `2px solid ${mobile==''? 'none'  : isMobileValid? 'green': 'red'}`}}
             />
             {!isMobileOtpSent && isMobileValid && (
               <button type="button"  className="otp_button" onClick={sendMobileOtp}>
@@ -249,14 +274,14 @@ const SignUp = () => {
             <>
               <div className="input-container">
                 <input
-                  type="text"
+                  type="text"  className={mobileOtp!==null && (mobileOtp.length===6? 'valid': 'invalid')}
+                  name='mobileOtp'
                   value={mobileOtp}
-                  onChange={(e) => setMobileOtp(e.target.value)}
+                  onChange={handleChanges}
                   placeholder="Enter Mobile OTP"
                   id='mobileOtpInput'
-                  style={{border: `2px solid ${mobileOtp ==''? 'none' : mobileOtp.length!==6?   'red': 'green'}`}}
                 />
-                {mobileOtp.length===6 && (
+                {mobileOtp!==null && mobileOtp.length===6 && (
                   <button type="button" className="otp_button" id='mobileVerify' onClick={verifyMobileOtp} style={{whiteSpace: 'noWrap'}}>
                     Verify OTP
                   </button>
@@ -267,11 +292,11 @@ const SignUp = () => {
 
           <div className="input-container">
             <input
-              type="password"
+              type="password" className={isPasswordValid!==null && (isPasswordValid? 'valid': 'invalid')}
+              name='password'
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChanges}
               placeholder="Create Password*"
-              style={{border: `2px solid ${password==''? 'none'  : isPasswordValid? 'green': 'red'}`}}
             />
           </div>
 

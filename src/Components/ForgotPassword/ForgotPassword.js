@@ -8,70 +8,109 @@ import axiosInstance from "../axiosInstance";
 import { useNavigate } from "react-router-dom/dist";
 
 const ResetPassword = () => {
+  const [inputs, setInputs] = useState({
+    email: null,
+    mobile: null,
+    otp: null,
+    newPassword: null,
+    confirmPassword: null,
+    isEmailValid: null,
+    isMobileValid: null,
+
+    isPasswordValid: null,
+  });
+
+  const {
+    email,
+    mobile,
+    newPassword,
+    confirmPassword,
+    isMobileValid,
+    otp,
+    mobileVerified,
+    isEmailValid,
+    isPasswordValid,
+  } = inputs;
+  const handleChanges = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (e.target.name === "email") {
+      setInputs((prev) => ({
+        ...prev,
+        isEmailValid: /[a-zA-Z0-9]+@gmail.com/.test(e.target.value),
+      }));
+    }
+    if (e.target.name === "newPassword") {
+      setInputs((prev) => ({
+        ...prev,
+        isPasswordValid:
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+            e.target.value
+          ),
+      }));
+    }
+  };
+
   const [loginType, setLoginType] = useState("email");
-  const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [otp, setOtp] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isMobileValid, setIsMobileValid] = useState(false);
   const [otpVisible, setOtpVisible] = useState(false);
   const [emailVerified, setemailVerified] = useState(false);
-  const [mobileVerified, setmobileVerified] = useState(false);
 
-  const isEmailValid = /^[A-Z0-9a-z]+@gmail\.com$/.test(email);
-  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(newPassword);
-
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  const handleLoginTypeChange = (type) => {
-    setLoginType(type);
-    setEmail("");
-    setMobile("");
-    setOtp("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setOtpVisible(false);
-    setIsMobileValid(false);
-  };
+  // const handleLoginTypeChange = (type) => {
+  //   setLoginType(type);
+  //   setEmail("");
+  //   setMobile("");
+  //   setOtp("");
+  //   setNewPassword("");
+  //   setConfirmPassword("");
+  //   setOtpVisible(false);
+  //   setIsMobileValid(false);
+  // };
 
-  const handleResetPassword = async(e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
-    e.target.disabled=true;
+    e.target.disabled = true;
     const obj = {
-      "email": email,
-      "password": newPassword,
-    }
-    await ApiServices.resetPassword(obj).then(async (res)=>{
-      dispatch(setToast({
-        message: 'Password changed Successfully !',
-        bgColor: ToastColors.success,
-        visibile: 'yes'
-      }))
-      localStorage.setItem('user', JSON.stringify(res.data))
-      await axiosInstance.customFnAddTokenInHeader(res.data.accessToken)
-      navigate('/login')
-    }).catch(err=>{
-      dispatch(setToast({
-        message: err.response.data.message,
-        bgColor: ToastColors.failure,
-        visibile: 'yes'
-      }))
-    })
-    setTimeout(()=>{
-      dispatch(setToast({
-        message: '',
-        bgColor: '',
-        visibile: 'no'
-      }))
-    }, 4000)
+      email: email,
+      password: newPassword,
+    };
+    await ApiServices.resetPassword(obj)
+      .then(async (res) => {
+        dispatch(
+          setToast({
+            message: "Password changed Successfully !",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        localStorage.setItem("user", JSON.stringify(res.data));
+        await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
+        navigate("/login");
+      })
+      .catch((err) => {
+        dispatch(
+          setToast({
+            message: err.response.data.message,
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+      });
+    setTimeout(() => {
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
   };
 
   const handleGetOtp = async (e) => {
-    e.target.disabled=true;
+    e.target.disabled = true;
     if (loginType === "email") {
       await ApiServices.sendOtp({
         to: email,
@@ -106,7 +145,6 @@ const ResetPassword = () => {
         );
       }, 4000);
     } else {
-      
     }
   };
 
@@ -124,7 +162,7 @@ const ResetPassword = () => {
             visibile: "yes",
           })
         );
-        document.getElementById('emailVerify').style.display = 'none'
+        document.getElementById("emailVerify").style.display = "none";
         setemailVerified(true);
       })
       .catch((err) => {
@@ -148,8 +186,8 @@ const ResetPassword = () => {
   };
 
   const handleMobileChange = (value) => {
-    setMobile(value);
-    setIsMobileValid(/^[0-9]{10}$/.test(value));
+    // setMobile(value);
+    // setIsMobileValid(/^[0-9]{10}$/.test(value));
   };
 
   return (
@@ -157,9 +195,9 @@ const ResetPassword = () => {
       <form className="form">
         <center>
           <h2>Reset Password</h2>
-          <p>Reset your password using either email or mobile number.</p>
+          <p>Reset your password either email</p>
         </center>
-        <div className="login-type-toggle">
+        {/* <div className="login-type-toggle">
           <span
             className={loginType === "email" ? "active" : ""}
             onClick={() => handleLoginTypeChange("email")}
@@ -172,15 +210,19 @@ const ResetPassword = () => {
           >
             Mobile
           </span>
-        </div>
+        </div> */}
         {loginType === "email" ? (
           <>
             <input
               type="text"
+              name="email"
+              className={
+                isEmailValid !== null && (isEmailValid ? "valid" : "invalid")
+              }
               value={email}
-              placeholder="Email Address"  disabled={otpVisible}
-              style={{border: `2px solid ${email==''? 'none' : isEmailValid? 'green': 'red'}`}}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email Address"
+              disabled={otpVisible}
+              onChange={handleChanges}
             />
             {isEmailValid && !otpVisible && (
               <button
@@ -195,16 +237,17 @@ const ResetPassword = () => {
               <>
                 <input
                   type="text"
+                  name="otp"
                   value={otp}
                   placeholder="Enter OTP"
-                  onChange={(e) => setOtp(e.target.value)}
+                  onChange={handleChanges}
                 />
-                {otp.length === 6 && (
+                {otp !== null && otp.length === 6 && (
                   <button
                     type="button"
                     className="otp_button"
                     onClick={verifyOtp}
-                    id='emailVerify'
+                    id="emailVerify"
                   >
                     Verify otp
                   </button>
@@ -231,12 +274,7 @@ const ResetPassword = () => {
             )}
             {otpVisible && (
               <>
-                <input
-                  type="text"
-                  value={otp}
-                  placeholder="Enter OTP"
-                  onChange={(e) => setOtp(e.target.value)}
-                />
+                <input type="text" value={otp} placeholder="Enter OTP" />
                 <button
                   type="button"
                   className="otp_button"
@@ -252,25 +290,39 @@ const ResetPassword = () => {
         {(emailVerified || mobileVerified) && (
           <>
             <input
+              name="newPassword"
               type="password"
+              className={
+                isPasswordValid !== null &&
+                (isPasswordValid ? "valid" : "invalid")
+              }
               value={newPassword}
               placeholder="New Password"
-              style={{border: `2px solid ${isPasswordValid? 'green': 'red'}`}}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={handleChanges}
             />
-           {isPasswordValid &&  <input
-              type="password"
-              value={confirmPassword}
-              placeholder="Confirm Password"
-              style={{border: `2px solid ${(newPassword!=='' && newPassword===confirmPassword)? 'green': 'red'}`}}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />}
+            {isPasswordValid && (
+              <input
+                name="confirmPassword"
+                type="password"
+                className={
+                  confirmPassword !== null &&
+                  (confirmPassword === newPassword ? "valid" : "invalid")
+                }
+                value={confirmPassword}
+                placeholder="Confirm Password"
+                onChange={handleChanges}
+              />
+            )}
           </>
         )}
         <button
           type="button"
           onClick={handleResetPassword}
-          disabled={!emailVerified || newPassword=='' || newPassword!==confirmPassword}
+          disabled={
+            !emailVerified ||
+            newPassword == "" ||
+            newPassword !== confirmPassword
+          }
         >
           Reset Password
         </button>
