@@ -179,6 +179,7 @@ const ResetPassword = () => {
               type="text"
               value={email}
               placeholder="Email Address"  disabled={otpVisible}
+              style={{border: `2px solid ${email==''? 'none' : isEmailValid? 'green': 'red'}`}}
               onChange={(e) => setEmail(e.target.value)}
             />
             {isEmailValid && !otpVisible && (
