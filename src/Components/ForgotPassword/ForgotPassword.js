@@ -40,6 +40,7 @@ const ResetPassword = () => {
 
   const handleResetPassword = async(e) => {
     e.preventDefault();
+    e.target.disabled=true;
     const obj = {
       "email": email,
       "password": newPassword,
@@ -69,10 +70,9 @@ const ResetPassword = () => {
     }, 4000)
   };
 
-  const handleGetOtp = async () => {
-    // Implement logic to send OTP (similar to login component)
+  const handleGetOtp = async (e) => {
+    e.target.disabled=true;
     if (loginType === "email") {
-      // Implement logic to send email OTP
       await ApiServices.sendOtp({
         to: email,
         subject: "Email Verification",
@@ -106,7 +106,7 @@ const ResetPassword = () => {
         );
       }, 4000);
     } else {
-      // Implement logic to send mobile OTP
+      
     }
   };
 

@@ -35,6 +35,7 @@ const SignUp = () => {
 
   const sendEmailOtp = async (e) => {
     e.preventDefault();
+    e.target.disabled=true;
     await ApiServices.sendOtp({
       "to": email,
       "subject": "Email Verification"
@@ -77,7 +78,7 @@ const SignUp = () => {
       setemailVerified(true);
     }).catch(err=>{
       dispatch(setToast({
-        message: 'OTP Entered Wrong',
+        message: 'Incorrect OTP',
         bgColor: ToastColors.failure,
         visibile: 'yes'
       }))
@@ -98,7 +99,7 @@ const SignUp = () => {
       "otp": emailOtp
     }).then((res)=>{
       dispatch(setToast({
-        message: 'Email verified successfully !',
+        message: 'Mobile verified successfully !',
         bgColor: ToastColors.success,
         visibile: 'yes'
       }))
@@ -107,7 +108,7 @@ const SignUp = () => {
       setmobileVerified(true);
     }).catch(err=>{
       dispatch(setToast({
-        message: 'OTP Entered Wrong',
+        message: 'Incorrect OTP',
         bgColor: ToastColors.failure,
         visibile: 'yes'
       }))
@@ -123,6 +124,7 @@ const SignUp = () => {
 
   const signup = async (e) => {
     e.preventDefault();
+    e.target.disabled=true;
     await ApiServices.register({
       "email": email,
       "password": password,
@@ -153,6 +155,7 @@ const SignUp = () => {
 
   const sendMobileOtp = (e) => {
     e.preventDefault();
+    e.target.disabled=true;
     setTimeout(() => {
       setIsMobileOtpSent(true);
     }, 1000);
@@ -185,6 +188,7 @@ const SignUp = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Full Name*"
+              style={{border: `2px solid ${name==''? 'none'  : isNameValid? 'green': 'red'}`}}
             />
           </div>
 
@@ -195,6 +199,7 @@ const SignUp = () => {
               onChange={(e) => setEmail(e.target.value)}
               disabled={isEmailOtpSent}
               placeholder="Email Address*"
+              style={{border: `2px solid ${email==''? 'none' : isEmailValid? 'green': 'red'}`}}
             />
             {!isEmailOtpSent && isEmailValid && (
               <button type="button" className="otp_button" onClick={sendEmailOtp}>
@@ -212,6 +217,7 @@ const SignUp = () => {
                   onChange={(e) => setEmailOtp(e.target.value)}
                   placeholder="Enter Email OTP"
                   id='emailOtpInput'
+                  
                 />
                 {emailOtp.length===6 && (
                   <button type="button" className="otp_button" id='emailVerify' onClick={verifyOtp} style={{whiteSpace: 'noWrap'}}>
@@ -228,6 +234,7 @@ const SignUp = () => {
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
               placeholder="Mobile Number*"
+              style={{border: `2px solid ${mobile==''? 'none'  : isMobileValid? 'green': 'red'}`}}
             />
             {!isMobileOtpSent && isMobileValid && (
               <button type="button"  className="otp_button" onClick={sendMobileOtp}>
@@ -261,6 +268,7 @@ const SignUp = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Create Password*"
+              style={{border: `2px solid ${password==''? 'none'  : isPasswordValid? 'green': 'red'}`}}
             />
           </div>
 

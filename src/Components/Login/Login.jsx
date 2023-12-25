@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { ApiServices } from "../../Services/ConfigurationServices";
@@ -51,6 +51,7 @@ const Login = () => {
 
   const verifyMobileOtp = async (e)=>{
     e.preventDefault();
+    e.target.disabled=true;
     setmobileVerified(true)
     document.getElementById('mobileVerify').style.display = 'none'
 
@@ -81,6 +82,7 @@ const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
+    e.target.disabled=true;
     const obj = {
       "email": email,
       "password": password,
@@ -112,6 +114,7 @@ const Login = () => {
 
   const mobileLogin = async (e) =>{
     e.preventDefault();
+    e.target.disabled=true;
     const obj = {
       "phone": mobile,
       "password": password,
