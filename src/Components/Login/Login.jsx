@@ -331,10 +331,12 @@ const Login = () => {
           Login
         </button>
         <p>
-          Don't have an account? <RouterLink to="/signup">Sign Up</RouterLink>
+          Don't have an account? <RouterLink to="/signup" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8'}}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
+    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Sign Up</RouterLink>
         </p>
         <p>
-          <RouterLink to="/forgotpassword">Forgot Password?</RouterLink>
+          <RouterLink to="/forgotpassword" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8'}}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
+    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Forgot Password?</RouterLink>
         </p>
       </form>
 

@@ -335,7 +335,8 @@ const SignUp = () => {
             Signup
           </button>
           <p>
-            Already have an account? <RouterLink to="/login">Login</RouterLink>
+            Already have an account? <RouterLink to="/login" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8',   transition: 'color 0.3s' }}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
+    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Login</RouterLink>
           </p>
         </form>
       </div>

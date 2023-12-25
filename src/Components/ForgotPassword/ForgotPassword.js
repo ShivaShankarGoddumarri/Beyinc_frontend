@@ -327,7 +327,8 @@ const ResetPassword = () => {
           Reset Password
         </button>
         <p>
-          Remember your password? <RouterLink to="/login">Login</RouterLink>
+          Remember your password? <RouterLink to="/login" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8',   transition: 'color 0.3s' }}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
+    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Login</RouterLink>
         </p>
       </form>
     </div>
