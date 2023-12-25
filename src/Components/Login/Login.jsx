@@ -179,8 +179,9 @@ const Login = () => {
     }, 4000)
   }
   return (
-    <div className="form-container">
-      <form className="form">
+    <div className="login-container">
+    {/* Login Form */}
+      <form className="login-form-container">
         <center>
           <h2>Login</h2>
           <p>Log in now to get full access.</p>
@@ -265,6 +266,13 @@ const Login = () => {
           <RouterLink to="/forgotpassword">Forgot Password?</RouterLink>
         </p>
       </form>
+      
+{/* Image Container */}
+<div className="login-image-container">
+        {/* Add your image source here */}
+        <img src="login.png" alt="Your Alt Text" />
+      </div>
+
     </div>
   );
 };

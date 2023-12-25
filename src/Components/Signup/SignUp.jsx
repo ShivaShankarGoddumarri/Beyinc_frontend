@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link as RouterLink } from 'react-router-dom';
-import './SignUp.css';
+import { Link as RouterLink } from "react-router-dom";
+import "./SignUp.css";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setToast } from "../../redux/AuthReducers/AuthReducer";
@@ -49,10 +49,9 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
   const sendEmailOtp = async (e) => {
     e.preventDefault();
-    e.target.disabled=true;
+    e.target.disabled = true;
     await ApiServices.sendOtp({
       "to": email,
       "subject": "Email Verification"
@@ -72,16 +71,18 @@ const SignUp = () => {
         visibile: 'yes'
       }))
     })
-    setTimeout(()=>{
-      dispatch(setToast({
-        message: '',
-        bgColor: '',
-        visibile: 'no'
-      }))
-    }, 4000)
+    setTimeout(() => {
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
   };
 
-  const verifyOtp = async (e)=>{
+  const verifyOtp = async (e) => {
     e.preventDefault();
     await ApiServices.verifyOtp({
       "email": email,
@@ -104,16 +105,18 @@ const SignUp = () => {
         visibile: 'yes'
       }))
     })
-    setTimeout(()=>{
-      dispatch(setToast({
-        message: '',
-        bgColor: '',
-        visibile: 'no'
-      }))
-    }, 4000)
-  }
+    setTimeout(() => {
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
+  };
 
-  const verifyMobileOtp = async (e)=>{
+  const verifyMobileOtp = async (e) => {
     e.preventDefault();
     await ApiServices.verifyOtp({
       "email": email,
@@ -136,50 +139,60 @@ const SignUp = () => {
         visibile: 'yes'
       }))
     })
-    setTimeout(()=>{
-      dispatch(setToast({
-        message: '',
-        bgColor: '',
-        visibile: 'no'
-      }))
-    }, 4000)
-  }
+    setTimeout(() => {
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
+  };
 
   const signup = async (e) => {
     e.preventDefault();
-    e.target.disabled=true;
+    e.target.disabled = true;
     await ApiServices.register({
-      "email": email,
-      "password": password,
-      "userName": name,
-      "phone": mobile
-    }).then((res)=>{
-      dispatch(setToast({
-        message: 'User Registered Successfully !',
-        bgColor: ToastColors.success,
-        visibile: 'yes'
-      }))
-      navigate('/login')
-    }).catch(err=>{
-      e.target.disabled=false
-      dispatch(setToast({
-        message: err.response.data.message,
-        bgColor: ToastColors.failure,
-        visibile: 'yes'
-      }))
+      email: email,
+      password: password,
+      userName: name,
+      phone: mobile,
     })
-    setTimeout(()=>{
-      dispatch(setToast({
-        message: '',
-        bgColor: '',
-        visibile: 'no'
-      }))
-    }, 4000)
-  }
+      .then((res) => {
+        dispatch(
+          setToast({
+            message: "User Registered Successfully !",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        navigate("/login");
+      })
+      .catch((err) => {
+        e.target.disabled = false;
+        dispatch(
+          setToast({
+            message: err.response.data.message,
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+      });
+    setTimeout(() => {
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
+  };
 
   const sendMobileOtp = (e) => {
     e.preventDefault();
-    e.target.disabled=true;
+    e.target.disabled = true;
     setTimeout(() => {
       // setIsMobileOtpSent(true);
       setInputs((prev)=>({...prev, isMobileOtpSent: true}))
@@ -196,18 +209,28 @@ const SignUp = () => {
     isPasswordValid;
 
   return (
-    <div className="registration-form-container">
+    <div className="registration-container">
+      {/* Image Container */}
+      <div className="registration-image-container">
+        <center>
+          <h2 style={{ marginTop: "40px", fontWeight: "600" }}>
+            Get Started Now
+          </h2>
+          <p style={{ fontSize: "14px" }}>
+            It's free to join and gain full access to thousands of exciting
+            investment opportunities.
+          </p>
+          <img src="investment.png" alt="Your Alt Text" />
+        </center>
       
+      </div>
+
+      {/* Form Container */}
+      <div className="registration-form-container">
         <form>
           <center>
-            <h2 style={{ marginTop: '40px', fontWeight: '400' }}>
-              Get Started Now
-            </h2>
-            <p style={{ fontSize: '14px' }}>
-              It's free to join and gain full access to thousands of exciting investment opportunities.
-            </p>
+          <h1>Signup</h1>
           </center>
-
           <div className="input-container">
             <input
               type="text" className={isNameValid!==null && (isNameValid? 'valid': 'invalid')}
@@ -228,7 +251,11 @@ const SignUp = () => {
               placeholder="Email Address*"
             />
             {!isEmailOtpSent && isEmailValid && (
-              <button type="button" className="otp_button" onClick={sendEmailOtp}>
+              <button
+                type="button"
+                className="otp_button"
+                onClick={sendEmailOtp}
+              >
                 Get OTP
               </button>
             )}
@@ -250,7 +277,7 @@ const SignUp = () => {
                   <button type="button" className="otp_button" id='emailVerify' onClick={verifyOtp} style={{whiteSpace: 'noWrap'}}>
                     Verify OTP
                   </button>
-            )}
+                )}
               </div>
             </>
           )}
@@ -264,7 +291,11 @@ const SignUp = () => {
               placeholder="Mobile Number*"
             />
             {!isMobileOtpSent && isMobileValid && (
-              <button type="button"  className="otp_button" onClick={sendMobileOtp}>
+              <button
+                type="button"
+                className="otp_button"
+                onClick={sendMobileOtp}
+              >
                 Get OTP
               </button>
             )}
@@ -285,7 +316,7 @@ const SignUp = () => {
                   <button type="button" className="otp_button" id='mobileVerify' onClick={verifyMobileOtp} style={{whiteSpace: 'noWrap'}}>
                     Verify OTP
                   </button>
-            )}
+                )}
               </div>
             </>
           )}
@@ -300,16 +331,15 @@ const SignUp = () => {
             />
           </div>
 
-          <button  type="submit" disabled={!isFormValid} onClick={signup}>
+          <button type="submit" disabled={!isFormValid} onClick={signup}>
             Signup
           </button>
           <p>
             Already have an account? <RouterLink to="/login">Login</RouterLink>
           </p>
         </form>
-     
+      </div>
     </div>
   );
 };
-
 export default SignUp;
