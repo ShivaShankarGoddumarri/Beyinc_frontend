@@ -40,6 +40,18 @@ export const ApiServices = {
     
         }) 
     },
+    editProfile: (obj) => {
+        return new Promise((resolve, reject) => {
+            axiosInstance.post(`/auth/editprofile`, obj)
+            .then((res) => {
+                if(res) {
+                    resolve(res)
+                }
+            })
+            .catch((err) => reject(err));
+    
+        }) 
+    },
     login : (obj) => {
         return new Promise((resolve, reject) => {
             axiosInstance.post(`/auth/login`, obj)
