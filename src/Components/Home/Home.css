@@ -4,9 +4,9 @@
 }
 
 navbar {
-    background-color: #3b82f6;
-    color: white;
-    padding: 20px;
+    background-color: #f6f8fc;
+    color: black;
+    padding: 15px;
     font-weight: 600;
     display: flex;
     justify-content: flex-end; 
