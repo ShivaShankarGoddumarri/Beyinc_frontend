@@ -275,7 +275,7 @@ const SignUp = () => {
       <div className="registration-form-container">
         <form>
           <center>
-            <h1>Signup</h1>
+            <h1 className="signup-heading">Signup</h1>
           </center>
           <div className="input-container">
             <input
@@ -321,7 +321,7 @@ const SignUp = () => {
               disabled={emailVerified}
               placeholder="Email Address*"
             />
-            {emailVerified == true && (
+            {emailVerified === true && (
               <img
                 src="checked.png"
                 height={20}
@@ -382,7 +382,7 @@ const SignUp = () => {
               onChange={handleChanges}
               placeholder="Mobile Number*"
             />
-            {mobileVerified == true && (
+            {mobileVerified === true && (
               <img
                 src="checked.png"
                 height={20}

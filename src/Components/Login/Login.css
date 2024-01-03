@@ -73,7 +73,8 @@ p {
     margin-right: 0px;
   } 
   .login-image-container img{
-    height: 300px;
+    height: 400px;
+    margin-top: -30px;
   }
   .login-form-container {
     width: 85%;

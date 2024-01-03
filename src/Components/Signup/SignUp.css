@@ -3,6 +3,10 @@
     justify-content: space-between;
 }
 
+.signup-heading{
+    margin-top: 5px;
+}
+
 .registration-form-container {
     width: 30%;
     margin-top: 150px;
@@ -51,13 +55,13 @@ label {
    
 }
 
-input {
+/* input {
     width: 330px !important; 
     padding: 15px;
     margin-bottom: 5px; 
     border: 1px solid lightgrey;
     border-radius: 3px;
-}
+} */
 
 .validation-icon {
     position: absolute;
@@ -116,27 +120,28 @@ button:hover {
 }
 
 
-
-
-
 @media (max-width: 768px) {
+    .signup-heading{
+        margin-top: 0px;
+    }
     .form-container {
       width: 80%;
     }
     .registration-container{
       flex-direction: column;
       gap: -10px;
+      width: 100%;
     } 
     .registration-image-container {
       width: 100%;
       margin-right: 0px;
-      
       margin-left: -2px;
+      margin-top: -15px;
     } 
     .registration-image-container img{
         width: 100%;
         border-radius: 10px;
-        margin-top: -60px;
+        margin-top: -40px;
         height: 300px;
     }
     .registration-form-container {
@@ -148,7 +153,7 @@ button:hover {
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       margin-left: 10px;
     }
-    
+   
   }
   
 

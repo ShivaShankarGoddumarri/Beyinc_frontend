@@ -152,7 +152,8 @@ const Login = () => {
         );
         localStorage.setItem("user", JSON.stringify(res.data));
         await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
-        navigate("/");
+        // navigate("/");
+        window.location.href='/';
       })
       .catch((err) => {
         e.target.disabled = false;
@@ -281,7 +282,7 @@ const Login = () => {
                 name="mobile"
                 onChange={handleChanges}
               />
-              {mobileVerified == true && (
+              {mobileVerified === true && (
                 <img
                   src="checked.png"
                   height={20} style={{right: '20px'}}

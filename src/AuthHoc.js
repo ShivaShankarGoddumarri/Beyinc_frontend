@@ -7,14 +7,13 @@ const AuthHoc = (Component) => {
         const [login, setlogin] = useState(false);
         useEffect(() => {
             if(localStorage.getItem('user')){
-                console.log(jwtDecode(localStorage.getItem('user').accessToken).email);
-                setlogin(jwtDecode(localStorage.getItem('user').accessToken).email ? true : false)
+                console.log(jwtDecode(JSON.parse(localStorage.getItem('user')).accessToken));
+                setlogin(jwtDecode(JSON.parse(localStorage.getItem('user')).accessToken).email ? true : false)
             }
         }, [])
         return(
             login ? <Component /> : <Login />
         )
-        
     }
 }
 

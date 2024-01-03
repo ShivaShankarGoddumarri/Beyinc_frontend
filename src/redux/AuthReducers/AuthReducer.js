@@ -1,12 +1,14 @@
 /* eslint-disable camelcase */
 /* eslint-disable max-len */
 import {createSlice} from '@reduxjs/toolkit';
+import { jwtDecode } from 'jwt-decode';
 
 export const apiCallSlice = createSlice(
     {
       name: 'apiCall',
       initialState: {
-        loginDetails: [],
+        loginDetails: {},
+
         ToastDetails: {
             message: '',
             bgColor: '',
@@ -20,19 +22,16 @@ export const apiCallSlice = createSlice(
         setToast: (state, action) => {
             state.ToastDetails = action.payload;
           },
-
     }
     });
 
-// export const getSummaryMetricsData_API = () => async (dispatch) => {
-//   try {
-//     const response = await axiosInstance.get('/home/getKPIData').then((resp) => resp);
-//     dispatch(callSummaryMetricsDataAPI(response.data));
-//   } catch (err) {
-//     throw new Error(err);
-//   }
-// };
 
+export  const apicallloginDetails = () => async(dispatch) => {
+  if(localStorage.getItem('user')){
+    console.log()
+    dispatch(setLoginData(jwtDecode(JSON.parse(localStorage.getItem('user')).accessToken)))
+  }
+}
 
 export const {setLoginData, setToast} = apiCallSlice.actions;
 

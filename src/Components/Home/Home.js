@@ -1,18 +1,14 @@
-import React from 'react'
-import './Home.css'
-
+import React from "react";
+import Navbar  from "../Navbar/Navbar";
 const Home = () => {
   return (
     <div>
-    <navbar>
-        User Name
-    <img src='profile.jpeg' alt=''/> 
-    </navbar>
-    <center>
-    <h1>Welcome User !</h1>
-    </center>
+    <Navbar/>
+      <center>
+        <h1>Welcome to Beyinc !</h1>
+      </center>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

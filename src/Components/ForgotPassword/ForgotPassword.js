@@ -213,8 +213,7 @@ const ResetPassword = () => {
         </div> */}
         {loginType === "email" ? (
           <>
-                    <div className="input-container">
-                    <input
+            <input
               type="text"
               name="email"
               className={
@@ -225,11 +224,15 @@ const ResetPassword = () => {
               disabled={emailVerified}
               onChange={handleChanges}
             />
-                        {emailVerified==true && <img src="checked.png" height={20}  alt="Your Alt Text" className='successIcons'/>}
+            {emailVerified === true && (
+              <img
+                src="checked.png"
+                height={20}
+                alt="Your Alt Text"
+                className="successIcons"
+              />
+            )}
 
-                    </div>
-
-           
             {isEmailValid && !otpVisible && (
               <button
                 type="button"
@@ -239,7 +242,7 @@ const ResetPassword = () => {
                 Get OTP
               </button>
             )}
-            {otpVisible && emailVerified!==true && (
+            {otpVisible && emailVerified !== true && (
               <>
                 <input
                   type="text"
@@ -263,17 +266,22 @@ const ResetPassword = () => {
           </>
         ) : (
           <>
-           <div className="input-container">
-           <input
-              type="text" disabled={mobileVerified}
+            <input
+              type="text"
+              disabled={mobileVerified}
               value={mobile}
               placeholder="Mobile Number"
               onChange={(e) => handleMobileChange(e.target.value)}
             />
-            {mobileVerified==true && <img src="checked.png" height={20}  alt="Your Alt Text" className='successIcons'/>}
+            {mobileVerified === true && (
+              <img
+                src="checked.png"
+                height={20}
+                alt="Your Alt Text"
+                className="successIcons"
+              />
+            )}
 
-           </div>
-            
             {isMobileValid && !otpVisible && (
               <button
                 type="button"
@@ -331,15 +339,27 @@ const ResetPassword = () => {
           onClick={handleResetPassword}
           disabled={
             !emailVerified ||
-            newPassword == "" ||
+            newPassword === "" ||
             newPassword !== confirmPassword
           }
         >
           Reset Password
         </button>
         <p>
-          Remember your password? <RouterLink to="/login" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8',   transition: 'color 0.3s' }}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
-    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Login</RouterLink>
+          Remember your password?{" "}
+          <RouterLink
+            to="/login"
+            style={{
+              textDecoration: "none",
+              fontWeight: "600",
+              color: "#1e4bb8",
+              transition: "color 0.3s",
+            }}
+            onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+            onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+          >
+            Login
+          </RouterLink>
         </p>
       </form>
     </div>
