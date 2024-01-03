@@ -5,6 +5,7 @@ import AuthHoc from "./AuthHoc";
 import Toast from "./Components/Toast/Toast";
 import { useDispatch } from "react-redux";
 import { apicallloginDetails } from "./redux/AuthReducers/AuthReducer";
+import Editprofile from "./Components/Editprofile/Editprofile";
 
 const SignUp = React.lazy(() => import("./Components/Signup/SignUp"));
 const Login = React.lazy(() => import("./Components/Login/Login"));
@@ -30,6 +31,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/" element={<Home />} />
+          <Route path="/editProfile" element={<Editprofile />} />
+
         </Routes>
       </Suspense>
     </div>

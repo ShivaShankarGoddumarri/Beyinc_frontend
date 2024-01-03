@@ -1,9 +1,11 @@
 import React from 'react';
 import './Navbar.css';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const {email, role, userName} = useSelector(store => store.auth.loginDetails)
+  const navigate = useNavigate()
   return (
     <div>
       <navbar>
@@ -44,16 +46,16 @@ const Navbar = () => {
           <div>
             <div>
               <div
-                to="/"
-                onClick={() => {
+              >
+                <div className="Account" onClick={() => {
+navigate(`/editProfile`)
+                }}>
+                  <i className="fas fa-user-edit" style={{ marginRight: '5px' }}></i> Edit Profile
+                </div>
+                <div className="logout"  onClick={() => {
                   localStorage.removeItem("user");
                   window.location.href = "/login";
-                }}
-              >
-                <div className="Account">
-                  <i className="fas fa-user-plus" style={{ marginRight: '5px' }}></i> Add Account
-                </div>
-                <div className="logout">
+                }}>
                   <i className="fas fa-sign-out-alt" style={{ marginRight: '5px' }}></i> Logout
                 </div>
                 <div className="Privacy">

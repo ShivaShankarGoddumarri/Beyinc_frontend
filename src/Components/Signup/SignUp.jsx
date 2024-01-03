@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setToast } from "../../redux/AuthReducers/AuthReducer";
 import { ToastColors } from "../Toast/ToastColors";
 import axiosInstance from "../axiosInstance";
-import { ApiServices } from "../../Services/ConfigurationServices";
+import { ApiServices } from "../../Services/ApiServices";
 import { useNavigate } from "react-router-dom/dist";
 
 const SignUp = () => {
@@ -200,7 +200,7 @@ const SignUp = () => {
       password: password,
       userName: name,
       phone: mobile,
-      role: role
+      role: role,
     })
       .then((res) => {
         dispatch(
@@ -250,10 +250,9 @@ const SignUp = () => {
     isNameValid &&
     isPasswordValid;
 
-
   const handleChangeRadio = (e) => {
-    setInputs((prev)=>({...prev, role: e.target.value}))
-  }
+    setInputs((prev) => ({ ...prev, role: e.target.value }));
+  };
 
   return (
     <div className="registration-container">
@@ -289,22 +288,60 @@ const SignUp = () => {
               placeholder="Full Name*"
             />
           </div>
-          <div className="input-container" style={{ display: "flex", justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center'  }}>
+          <div
+            className="input-container"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <input
                 type="radio"
                 name="role"
                 value="Entrepreneur"
-                id="Entrepreneur" onClick={handleChangeRadio}
+                id="Entrepreneur"
+                onClick={handleChangeRadio}
               />
               <label for="Entrepreneur">Entrepreneur</label>
             </div>
-            <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center'  }}>
-              <input type="radio" name="role" value="Mentor" id="Mentor" onClick={handleChangeRadio} />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="radio"
+                name="role"
+                value="Mentor"
+                id="Mentor"
+                onClick={handleChangeRadio}
+              />
               <label for="Mentor">Mentor</label>
             </div>
-            <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center'  }}>
-              <input type="radio" name="role" value="Investor" id="Investor" onClick={handleChangeRadio}/>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="radio"
+                name="role"
+                value="Investor"
+                id="Investor"
+                onClick={handleChangeRadio}
+              />
               <label for="Investor">Investor</label>
             </div>
           </div>
@@ -402,7 +439,7 @@ const SignUp = () => {
             )}
           </div>
 
-          {isMobileOtpSent && mobileVerified !== true &&(
+          {isMobileOtpSent && mobileVerified !== true && (
             <>
               <div className="input-container">
                 <input
@@ -450,8 +487,19 @@ const SignUp = () => {
             Signup
           </button>
           <p>
-            Already have an account? <RouterLink to="/login" style={{textDecoration: 'none', fontWeight: '600', color: '#1e4bb8' }}  onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
-    onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Login</RouterLink>
+            Already have an account?{" "}
+            <RouterLink
+              to="/login"
+              style={{
+                textDecoration: "none",
+                fontWeight: "600",
+                color: "#1e4bb8",
+              }}
+              onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+              onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+            >
+              Login
+            </RouterLink>
           </p>
         </form>
       </div>

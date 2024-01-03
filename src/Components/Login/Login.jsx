@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import "./Login.css";
-import { ApiServices } from "../../Services/ConfigurationServices";
+import { ApiServices } from "../../Services/ApiServices";
 import { useDispatch } from "react-redux";
 import { setToast } from "../../redux/AuthReducers/AuthReducer";
 import { ToastColors } from "../Toast/ToastColors";
@@ -153,7 +153,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(res.data));
         await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
         // navigate("/");
-        window.location.href='/';
+        window.location.href = "/";
       })
       .catch((err) => {
         e.target.disabled = false;
@@ -285,7 +285,8 @@ const Login = () => {
               {mobileVerified === true && (
                 <img
                   src="checked.png"
-                  height={20} style={{right: '20px'}}
+                  height={20}
+                  style={{ right: "20px" }}
                   alt="Your Alt Text"
                   className="successIcons"
                 />
@@ -301,7 +302,7 @@ const Login = () => {
                 Get OTP
               </button>
             )}
-            {otpVisible && mobileVerified !==true && (
+            {otpVisible && mobileVerified !== true && (
               <>
                 <input
                   type="text"
