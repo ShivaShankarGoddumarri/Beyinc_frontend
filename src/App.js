@@ -5,14 +5,14 @@ import AuthHoc from "./AuthHoc";
 import Toast from "./Components/Toast/Toast";
 import { useDispatch } from "react-redux";
 import { apicallloginDetails } from "./redux/AuthReducers/AuthReducer";
-import Editprofile from "./Components/Editprofile/Editprofile";
 
 const SignUp = React.lazy(() => import("./Components/Signup/SignUp"));
 const Login = React.lazy(() => import("./Components/Login/Login"));
-const ForgotPassword = React.lazy(() =>
-  import("./Components/ForgotPassword/ForgotPassword"));
+const ForgotPassword = React.lazy(() => wait(1000).then(() => import("./Components/ForgotPassword/ForgotPassword")));
 const Navbar = React.lazy(() => import("./Components/Navbar/Navbar"));
-const Home = React.lazy(() => import("./Components/Home/Home"));
+const Home = React.lazy(() => wait(1000).then(() => import("./Components/Home/Home")));
+const Editprofile = React.lazy(() => wait(1000).then(() => import("./Components/Editprofile/Editprofile")));
+
 const ENV = process.env;
 
 
@@ -24,7 +24,10 @@ const App = () => {
 
   return (
     <div>
-      <Suspense fallback={<div>Loading....</div>}>
+      <Suspense fallback={<div className="Loading">
+        <img src="Loader.gif"/>
+        Loading...
+      </div>}>
         <Toast />
         <Navbar/>
 
@@ -41,4 +44,9 @@ const App = () => {
   );
 };
 
+function wait(time) {
+  return new Promise( resolve => {
+      setTimeout(resolve, time)
+  })
+}
 export default App;
