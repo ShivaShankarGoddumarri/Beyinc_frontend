@@ -2,8 +2,24 @@
     margin: 0;
     padding: 0;
 }
+.logo{
+   margin-right: 82%;
+   font-size: 26px;
+   font-weight: 600;
+   color: #0b57d0;
+}
 
-navbar {
+.Profile-img{
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 4px;
+}
+.Profile-img:hover{
+    background: #EAF1FB;
+}
+
+
+.navbar {
     background-color: #f6f8fc;
     color: black;
     padding: 15px;

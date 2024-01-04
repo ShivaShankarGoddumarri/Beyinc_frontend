@@ -7,16 +7,15 @@ const Navbar = () => {
   const {email, role, userName} = useSelector(store => store.auth.loginDetails)
   const navigate = useNavigate()
   return (
-    <div>
-      <navbar>
+    <div className='navbar'>
+    <div className='logo'>BEYINC</div>
       {role}
         <div onClick={(e) => {
           document
             .getElementsByClassName("userDetails")[0]
             .classList.toggle("showUserDetails");
         }}>
-          <img
-            style={{ borderRadius: '50%', cursor: 'pointer' }}
+          <img className='Profile-img'
             src="Profile.jpeg"
           />
         </div>
@@ -25,6 +24,7 @@ const Navbar = () => {
             document
               .getElementsByClassName("userDetails")[0]
               .classList.remove("showUserDetails");
+              
           }}>
             <i className="fas fa-times cross" ></i>
           </div>
@@ -69,7 +69,7 @@ navigate(`/editProfile`)
             </div>
           </div>
         </div>
-      </navbar>
+     
     </div>
   );
 };
