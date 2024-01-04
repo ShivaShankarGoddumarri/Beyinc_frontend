@@ -61,6 +61,43 @@ const Navbar = () => {
       );
     }, 4000);
   }
+
+  const deleteImg = async (e) => {
+    e.target.disabled = true
+    await ApiServices.deleteuserProfileImage({ email: email}).then((async (res) => {
+      localStorage.setItem('user', JSON.stringify(res.data));
+      dispatch(setLoginData(jwtDecode(res.data.accessToken)))
+      await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
+      dispatch(
+        setToast({
+          message: "Image removed successfully",
+          bgColor: ToastColors.success,
+          visibile: "yes",
+        })
+      );
+      e.target.disabled = false
+
+    })).catch((err) => {
+      dispatch(
+        setToast({
+          message: "Error during image delete",
+          bgColor: ToastColors.failure,
+          visibile: "yes",
+        })
+      );
+      e.target.disabled = false
+    })
+    setTimeout(() => {
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
+  }
+
   return (
     <div
       className="navbar"
@@ -104,7 +141,11 @@ const Navbar = () => {
           </div>
         </div>
         <input type="file" name="" id="file-input" onChange={handleImage} />
-        <button onClick={submit}>send Image</button>
+        <div style={{display: 'flex', gap: '2px'}}>
+          <button onClick={submit}>send Image</button>
+          <button onClick={deleteImg}>delete Image</button>
+        </div>
+
         <div className="username">Hi, {userName}!</div>
         <div className="manage">Manage your Google Account</div>
         <div>
