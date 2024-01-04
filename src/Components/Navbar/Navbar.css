@@ -228,3 +228,8 @@ cursor: pointer;
 }
 
 
+#alert-dialog-description{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

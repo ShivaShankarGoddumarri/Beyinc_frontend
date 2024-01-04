@@ -7,9 +7,26 @@ import axiosInstance from "../axiosInstance";
 import { setLoginData, setToast } from "../../redux/AuthReducers/AuthReducer";
 import { ToastColors } from "../Toast/ToastColors";
 import { jwtDecode } from "jwt-decode";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 const Navbar = () => {
-  const {email, role, userName, image} = useSelector(store => store.auth.loginDetails)
+  const { email, role, userName, image } = useSelector(store => store.auth.loginDetails)
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [changeImage, setchangeImage] = useState('')
@@ -137,13 +154,8 @@ const Navbar = () => {
               src={image === undefined ? "Profile.jpeg" : image} 
               alt="Profile"
             />
-            <i className="fas fa-pencil-alt edit-icon"></i>
+            <i className="fas fa-pencil-alt edit-icon" onClick={handleClickOpen}></i>
           </div>
-        </div>
-        <input type="file" name="" id="file-input" onChange={handleImage} />
-        <div style={{display: 'flex', gap: '2px'}}>
-          <button onClick={submit}>send Image</button>
-          <button onClick={deleteImg}>delete Image</button>
         </div>
 
         <div className="username">Hi, {userName}!</div>
@@ -186,6 +198,40 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" style={{display: 'flex', justifyContent: 'center'}}>
+          {'Profile picture'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <div>
+              <img
+                style={{
+                  borderRadius: "50%",
+                  cursor: "pointer",
+                  height: '150px',
+                  width: '150px'
+                }}
+                src={image === undefined ? "Profile.jpeg" : image}
+                alt="Profile"
+              />
+           </div>
+            <div>
+              <input type="file" name="" onChange={handleImage}/>
+            </div>
+            <div style={{ display: 'flex', gap: '2px' }}>
+              <button onClick={submit}>send Image</button>
+              <button onClick={deleteImg}>delete Image</button>
+            </div>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
