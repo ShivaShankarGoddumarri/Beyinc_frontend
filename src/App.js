@@ -26,6 +26,8 @@ const App = () => {
     <div>
       <Suspense fallback={<div>Loading....</div>}>
         <Toast />
+        <Navbar/>
+
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
@@ -39,4 +41,4 @@ const App = () => {
   );
 };
 
-export default AuthHoc(App);
+export default App;

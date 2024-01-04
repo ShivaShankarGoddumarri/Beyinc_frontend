@@ -3,7 +3,6 @@ import Navbar  from "../Navbar/Navbar";
 const Home = () => {
   return (
     <div>
-    <Navbar/>
       <center>
         <h1>Welcome to Beyinc !</h1>
       </center>

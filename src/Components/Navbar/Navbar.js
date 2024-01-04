@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
   const {email, role, userName} = useSelector(store => store.auth.loginDetails)
   const navigate = useNavigate()
+  console.log(email)
   return (
-    <div className='navbar'>
+    <div className='navbar' style={{display: email == undefined ?"none":"flex"}}>
     <div className='logo'>BEYINC</div>
       {role}
         <div onClick={(e) => {
