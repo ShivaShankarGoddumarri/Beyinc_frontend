@@ -15,6 +15,18 @@ export const ApiServices = {
 
         })
     },
+    updateuserProfileImage: (obj) => {
+        return new Promise((resolve, reject) => {
+            axiosInstance.post(`/userDetails/updateProfileImage`, obj)
+                .then((res) => {
+                    if (res) {
+                        resolve(res)
+                    }
+                })
+                .catch((err) => reject(err));
+
+        })
+    },
     refreshToken: (obj) => {
         return new Promise((resolve, reject) => {
             axiosInstance.post(`/auth/refresh-token`, obj)

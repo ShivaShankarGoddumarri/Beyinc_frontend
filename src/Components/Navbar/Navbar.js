@@ -1,11 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Navbar.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ApiServices } from "../../Services/ApiServices";
+import axiosInstance from "../axiosInstance";
+import { setLoginData, setToast } from "../../redux/AuthReducers/AuthReducer";
+import { ToastColors } from "../Toast/ToastColors";
+import { jwtDecode } from "jwt-decode";
 
 const Navbar = () => {
-  const {email, role, userName} = useSelector(store => store.auth.loginDetails)
+  const {email, role, userName, image} = useSelector(store => store.auth.loginDetails)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [changeImage, setchangeImage] = useState('')
+  const handleImage = (e) => {
+    const file = e.target.files[0]
+    setFileBase(file);
+  }
+  const setFileBase = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setchangeImage(reader.result)
+    }
+  }
+  
+  const submit = async () => {
+    await ApiServices.updateuserProfileImage({ email: email, image: changeImage }).then((async (res) => {
+      console.log(res.data);
+      localStorage.setItem('user', JSON.stringify(res.data));
+      dispatch(setLoginData(jwtDecode(res.data.accessToken)))
+      await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
+      dispatch(
+        setToast({
+          message: "Image uploaded successfully",
+          bgColor: ToastColors.success,
+          visibile: "yes",
+        })
+      );
+    })).catch((err) => {
+      dispatch(
+        setToast({
+          message: "Error during image upload",
+          bgColor: ToastColors.failure,
+          visibile: "yes",
+        })
+      );
+    })
+    setTimeout(() => {
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
+  }
   return (
     <div
       className="navbar"
@@ -20,7 +71,7 @@ const Navbar = () => {
             .classList.toggle("showUserDetails");
         }}
       >
-        <img className="Profile-img" src="Profile.jpeg" />
+        <img className="Profile-img" src={image === undefined ? "Profile.jpeg" : image} alt="" />
       </div>
       <div className="userDetails">
         <div
@@ -42,12 +93,14 @@ const Navbar = () => {
                 cursor: "pointer",
                 maxWidth: "100%",
               }}
-              src="Profile.jpeg"
+              src={image === undefined ? "Profile.jpeg" : image} 
               alt="Profile"
             />
             <i className="fas fa-pencil-alt edit-icon"></i>
           </div>
         </div>
+        <input type="file" name="" id="file-input" onChange={handleImage} />
+        <button onClick={submit}>send Image</button>
         <div className="username">Hi, {userName}!</div>
         <div className="manage">Manage your Google Account</div>
         <div>
