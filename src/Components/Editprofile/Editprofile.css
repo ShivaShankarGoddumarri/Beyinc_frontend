@@ -76,8 +76,8 @@ label {
       gap: -10px;
       width: 100%;
     } 
-    input[type='radio']{
-        margin-left: -10px !important;
+    input[type='text'], input[type='email'] {
+       width: 80% !important; 
     }
     button{
                width: 89% !important; 
