@@ -76,9 +76,23 @@ label {
       gap: -10px;
       width: 100%;
     } 
+    input[type='radio']{
+        margin-left: -10px !important;
+    }
+    button{
+               width: 89% !important; 
+
+    }
+    .successIcons{
+    position: absolute;
+    right: 50px;
+    top: 14px;
+    height: 20px;
+    width: 20px;
+    }
     
     .update-form-container {
-      width: 85%;
+      width: 82%;
       margin-top: 10px;
       padding: 20px;
       border: 1px solid #ccc;
