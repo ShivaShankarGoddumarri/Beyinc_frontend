@@ -3,6 +3,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { jwtDecode } from 'jwt-decode';
 import axiosInstance from '../../Components/axiosInstance';
+import { ApiServices } from '../../Services/ApiServices';
 
 export const apiCallSlice = createSlice(
     {
@@ -28,9 +29,22 @@ export const apiCallSlice = createSlice(
 
 
 export  const apicallloginDetails = () => async(dispatch) => {
-  if(localStorage.getItem('user')){
-    dispatch(setLoginData(jwtDecode(JSON.parse(localStorage.getItem('user')).accessToken)))
-    await axiosInstance.customFnAddTokenInHeader(JSON.parse(localStorage.getItem('user')).accessToken);
+  if (localStorage.getItem('user')) {
+    await ApiServices.verifyAccessToken({ accessToken: JSON.parse(localStorage.getItem('user')).accessToken }).then(() => {
+      dispatch(setLoginData(jwtDecode(JSON.parse(localStorage.getItem('user')).accessToken)))
+      axiosInstance.customFnAddTokenInHeader(JSON.parse(localStorage.getItem('user')).accessToken);
+    }).catch(async (err) => {
+      await ApiServices.refreshToken({ refreshToken: JSON.parse(localStorage.getItem('user')).refreshToken }).then((res) => {
+        localStorage.setItem('user', JSON.stringify(res.data))
+        dispatch(setLoginData(jwtDecode(res.data.accessToken)))
+        axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
+      }).catch(err => {
+        localStorage.removeItem('user')
+        window.location.href = '/login'
+      })
+      
+    })
+    
   }
 }
 

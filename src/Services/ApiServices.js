@@ -3,12 +3,24 @@ import axiosInstance from "../Components/axiosInstance";
 
 
 export const ApiServices = {
+    verifyAccessToken: (obj) => {
+        return new Promise((resolve, reject) => {
+            axiosInstance.post(`/auth/verifyApiAccessToken`, obj)
+                .then((res) => {
+                    if (res) {
+                        resolve(res)
+                    }
+                })
+                .catch((err) => reject(err));
+
+        })
+    },
     refreshToken: (obj) => {
         return new Promise((resolve, reject) => {
             axiosInstance.post(`/auth/refresh-token`, obj)
                 .then((res) => {
                     if (res) {
-                        console.log(res);
+                        
                         resolve(res)
                     }
                 })
@@ -21,7 +33,7 @@ export const ApiServices = {
             axiosInstance.post(`/auth/sendEmailOtp`, obj)
             .then((res) => {
                 if(res) {
-                    console.log(res);
+                    
                     resolve(res)
                 }
             })
