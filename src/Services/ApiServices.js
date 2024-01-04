@@ -3,6 +3,19 @@ import axiosInstance from "../Components/axiosInstance";
 
 
 export const ApiServices = {
+    refreshToken: (obj) => {
+        return new Promise((resolve, reject) => {
+            axiosInstance.post(`/auth/refresh-token`, obj)
+                .then((res) => {
+                    if (res) {
+                        console.log(res);
+                        resolve(res)
+                    }
+                })
+                .catch((err) => reject(err));
+
+        })
+    },
     sendOtp : (obj) => {
         return new Promise((resolve, reject) => {
             axiosInstance.post(`/auth/sendEmailOtp`, obj)

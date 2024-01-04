@@ -61,7 +61,13 @@ const Editprofile = () => {
         }));
       })
       .catch((error) => {
-        console.log(error);
+        dispatch(
+          setToast({
+            message: error.response.data.message,
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
       });
   }, [email]);
 

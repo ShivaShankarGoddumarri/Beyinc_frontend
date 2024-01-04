@@ -2,6 +2,7 @@
 /* eslint-disable max-len */
 import {createSlice} from '@reduxjs/toolkit';
 import { jwtDecode } from 'jwt-decode';
+import axiosInstance from '../../Components/axiosInstance';
 
 export const apiCallSlice = createSlice(
     {
@@ -28,8 +29,8 @@ export const apiCallSlice = createSlice(
 
 export  const apicallloginDetails = () => async(dispatch) => {
   if(localStorage.getItem('user')){
-    console.log()
     dispatch(setLoginData(jwtDecode(JSON.parse(localStorage.getItem('user')).accessToken)))
+    await axiosInstance.customFnAddTokenInHeader(JSON.parse(localStorage.getItem('user')).accessToken);
   }
 }
 

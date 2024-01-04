@@ -151,7 +151,6 @@ const Login = () => {
           })
         );
         localStorage.setItem("user", JSON.stringify(res.data));
-        await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
         // navigate("/");
         window.location.href = "/";
       })
