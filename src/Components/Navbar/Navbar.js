@@ -25,7 +25,8 @@ const Navbar = () => {
     }
   }
   
-  const submit = async () => {
+  const submit = async (e) => {
+    e.target.disabled = true
     await ApiServices.updateuserProfileImage({ email: email, image: changeImage }).then((async (res) => {
       console.log(res.data);
       localStorage.setItem('user', JSON.stringify(res.data));
@@ -38,6 +39,8 @@ const Navbar = () => {
           visibile: "yes",
         })
       );
+      e.target.disabled = false
+
     })).catch((err) => {
       dispatch(
         setToast({
@@ -46,6 +49,7 @@ const Navbar = () => {
           visibile: "yes",
         })
       );
+      e.target.disabled = false
     })
     setTimeout(() => {
       dispatch(
