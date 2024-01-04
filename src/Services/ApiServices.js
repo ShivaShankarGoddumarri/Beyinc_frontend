@@ -40,17 +40,17 @@ export const ApiServices = {
     
         }) 
     },
-    editProfile: (obj) => {
+    sendForApproval: (obj) => {
         return new Promise((resolve, reject) => {
-            axiosInstance.post(`/auth/editprofile`, obj)
-            .then((res) => {
-                if(res) {
-                    resolve(res)
-                }
-            })
-            .catch((err) => reject(err));
-    
-        }) 
+            axiosInstance.post(`/userDetails/editprofile`, obj)
+                .then((res) => {
+                    if (res) {
+                        resolve(res)
+                    }
+                })
+                .catch((err) => reject(err));
+
+        })
     },
     getProfile: (obj) => {
         return new Promise((resolve, reject) => {

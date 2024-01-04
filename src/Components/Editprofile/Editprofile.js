@@ -9,6 +9,7 @@ import axiosInstance from "../axiosInstance";
 import { ApiServices } from "../../Services/ApiServices";
 import { useNavigate } from "react-router-dom/dist";
 import "./Editprofile.css";
+import { AdminServices } from "../../Services/AdminServices";
 
 const Editprofile = () => {
   const { email, role, userName } = useSelector(
@@ -80,50 +81,50 @@ const Editprofile = () => {
         ...prev,
         isMobileValid: /^[0-9]{10}$/.test(e.target.value),
       }));
-      setInputs((prev) => ({ ...prev, mobileVerified: false }));
+      setInputs((prev) => ({ ...prev, mobileVerified: false, isMobileOtpSent: false}));
     }
   };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const sendEmailOtp = async (e) => {
-  //   e.preventDefault();
-  //   e.target.disabled = true;
-  //   await ApiServices.sendOtp({
-  //     to: email,
-  //     subject: "Email Verification",
-  //   })
-  //     .then((res) => {
-  //       dispatch(
-  //         setToast({
-  //           message: "OTP sent successfully !",
-  //           bgColor: ToastColors.success,
-  //           visibile: "yes",
-  //         })
-  //       );
-  //       // setIsEmailOtpSent(true);
-  //       setInputs((prev) => ({ ...prev, isEmailOtpSent: true }));
-  //     })
-  //     .catch((err) => {
-  //       dispatch(
-  //         setToast({
-  //           message: "OTP sent failed !",
-  //           bgColor: ToastColors.failure,
-  //           visibile: "yes",
-  //         })
-  //       );
-  //     });
-  //   setTimeout(() => {
-  //     dispatch(
-  //       setToast({
-  //         message: "",
-  //         bgColor: "",
-  //         visibile: "no",
-  //       })
-  //     );
-  //   }, 4000);
-  // };
+  const sendMobileOtp = async (e) => {
+    e.preventDefault();
+    e.target.disabled = true;
+    await ApiServices.sendOtp({
+      to: email,
+      subject: "Mobile Verification",
+    })
+      .then((res) => {
+        dispatch(
+          setToast({
+            message: "OTP sent successfully !",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        // setIsEmailOtpSent(true);
+        setInputs((prev) => ({ ...prev, isMobileOtpSent: true }));
+      })
+      .catch((err) => {
+        dispatch(
+          setToast({
+            message: "OTP sent failed !",
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+      });
+    setTimeout(() => {
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
+  };
 
   // const verifyOtp = async (e) => {
   //   e.preventDefault();
@@ -166,71 +167,31 @@ const Editprofile = () => {
 
   const verifyMobileOtp = async (e) => {
     e.preventDefault();
-    setInputs((prev) => ({ ...prev, mobileVerified: true }));
-    if (name != "") {
-      setInputs((prev) => ({ ...prev, isNameValid: true }));
-    }
-    // await ApiServices.verifyOtp({
-    //   email: email,
-    //   otp: emailOtp,
-    // })
-    //   .then((res) => {
-    //     dispatch(
-    //       setToast({
-    //         message: "Mobile verified successfully !",
-    //         bgColor: ToastColors.success,
-    //         visibile: "yes",
-    //       })
-    //     );
-    //     document.getElementById("mobileVerify").style.display = "none";
-    //     document.getElementById("mobileOtpInput").disabled = true;
-    //     // setmobileVerified(true);
-    //     setInputs((prev) => ({ ...prev, mobileVerified: true }));
-    //   })
-    //   .catch((err) => {
-    //     dispatch(
-    //       setToast({
-    //         message: "Incorrect OTP",
-    //         bgColor: ToastColors.failure,
-    //         visibile: "yes",
-    //       })
-    //     );
-    //   });
-    // setTimeout(() => {
-    //   dispatch(
-    //     setToast({
-    //       message: "",
-    //       bgColor: "",
-    //       visibile: "no",
-    //     })
-    //   );
-    // }, 4000);
-  };
-
-  const update = async (e) => {
-    e.preventDefault();
-    e.target.disabled = true;
-    await ApiServices.register({
+    await ApiServices.verifyOtp({
       email: email,
-      userName: name,
-      phone: mobile,
-      role: role,
+      otp: mobileOtp,
     })
       .then((res) => {
         dispatch(
           setToast({
-            message: "User Registered Successfully !",
+            message: "Mobile verified successfully !",
             bgColor: ToastColors.success,
             visibile: "yes",
           })
         );
-        navigate("/login");
+        document.getElementById("mobileVerify").style.display = "none";
+        document.getElementById("mobileOtpInput").disabled = true;
+        // setmobileVerified(true);
+        setInputs((prev) => ({ ...prev, mobileVerified: true }));
+        document.getElementById('mobile').disabled = true;
+        if (name != "") {
+          setInputs((prev) => ({ ...prev, isNameValid: true }));
+        }
       })
       .catch((err) => {
-        e.target.disabled = false;
         dispatch(
           setToast({
-            message: err.response.data.message,
+            message: "Incorrect OTP",
             bgColor: ToastColors.failure,
             visibile: "yes",
           })
@@ -247,14 +208,69 @@ const Editprofile = () => {
     }, 4000);
   };
 
-  const sendMobileOtp = (e) => {
+  const update = async (e) => {
     e.preventDefault();
     e.target.disabled = true;
+    await ApiServices.sendForApproval({
+      email: email,
+      userName: name,
+      phone: mobile,
+      role: role,
+    })
+      .then((res) => {
+        dispatch(
+          setToast({
+            message: "Profile Sent for approval!",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        setInputs({
+          email: null,
+          emailOtp: null,
+          mobile: null,
+          mobileOtp: null,
+          name: null,
+          role: null,
+          isMobileOtpSent: null,
+          isEmailOtpSent: null,
+          emailVerified: null,
+          mobileVerified: null,
+          isEmailValid: null,
+          isMobileValid: null,
+          isNameValid: null,
+        })
+        navigate('/')
+      })
+      .catch((err) => {
+        e.target.disabled = false;
+        dispatch(
+          setToast({
+            message: 'Error occured when sending profile to approval',
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+      });
     setTimeout(() => {
-      // setIsMobileOtpSent(true);
-      setInputs((prev) => ({ ...prev, isMobileOtpSent: true }));
-    }, 1000);
+      dispatch(
+        setToast({
+          message: "",
+          bgColor: "",
+          visibile: "no",
+        })
+      );
+    }, 4000);
   };
+
+  // const sendMobileOtp = (e) => {
+  //   e.preventDefault();
+  //   e.target.disabled = true;
+  //   setTimeout(() => {
+  //     // setIsMobileOtpSent(true);
+  //     setInputs((prev) => ({ ...prev, isMobileOtpSent: true }));
+  //   }, 1000);
+  // };
 
   const isFormValid = mobileVerified && isNameValid;
 
@@ -407,6 +423,7 @@ const Editprofile = () => {
                 mobile !== null && (mobile.length === 10 ? "valid" : "invalid")
               }
               name="mobile"
+              id='mobile'
               value={mobile}
               onChange={handleChanges}
               placeholder="Mobile Number*"
