@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Navbar.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -7,19 +7,24 @@ import axiosInstance from "../axiosInstance";
 import { setLoginData, setToast } from "../../redux/AuthReducers/AuthReducer";
 import { ToastColors } from "../Toast/ToastColors";
 import { jwtDecode } from "jwt-decode";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 const Navbar = () => {
-  const { email, role, userName, image } = useSelector(store => store.auth.loginDetails)
+  const { email, role, userName, image } = useSelector(
+    (store) => store.auth.loginDetails
+  );
   const [open, setOpen] = React.useState(false);
+  const userDetailsRef = useRef(null);
 
   const handleClickOpen = () => {
+      document
+        .getElementsByClassName("userDetails")[0]
+        .classList.remove("showUserDetails");
     setOpen(true);
   };
 
@@ -27,47 +32,51 @@ const Navbar = () => {
     setOpen(false);
   };
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const [changeImage, setchangeImage] = useState('')
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [changeImage, setchangeImage] = useState("");
   const handleImage = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     setFileBase(file);
-  }
+  };
   const setFileBase = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setchangeImage(reader.result)
-    }
-  }
-  
-  const submit = async (e) => {
-    e.target.disabled = true
-    await ApiServices.updateuserProfileImage({ email: email, image: changeImage }).then((async (res) => {
-      console.log(res.data);
-      localStorage.setItem('user', JSON.stringify(res.data));
-      dispatch(setLoginData(jwtDecode(res.data.accessToken)))
-      await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
-      dispatch(
-        setToast({
-          message: "Image uploaded successfully",
-          bgColor: ToastColors.success,
-          visibile: "yes",
-        })
-      );
-      e.target.disabled = false
+      setchangeImage(reader.result);
+    };
+  };
 
-    })).catch((err) => {
-      dispatch(
-        setToast({
-          message: "Error during image upload",
-          bgColor: ToastColors.failure,
-          visibile: "yes",
-        })
-      );
-      e.target.disabled = false
+  const submit = async (e) => {
+    e.target.disabled = true;
+    await ApiServices.updateuserProfileImage({
+      email: email,
+      image: changeImage,
     })
+      .then(async (res) => {
+        console.log(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        dispatch(setLoginData(jwtDecode(res.data.accessToken)));
+        await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
+        dispatch(
+          setToast({
+            message: "Image uploaded successfully",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        e.target.disabled = false;
+      })
+      .catch((err) => {
+        dispatch(
+          setToast({
+            message: "Error during image upload",
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+        e.target.disabled = false;
+      });
     setTimeout(() => {
       dispatch(
         setToast({
@@ -77,33 +86,34 @@ const Navbar = () => {
         })
       );
     }, 4000);
-  }
+  };
 
   const deleteImg = async (e) => {
-    e.target.disabled = true
-    await ApiServices.deleteuserProfileImage({ email: email}).then((async (res) => {
-      localStorage.setItem('user', JSON.stringify(res.data));
-      dispatch(setLoginData(jwtDecode(res.data.accessToken)))
-      await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
-      dispatch(
-        setToast({
-          message: "Image removed successfully",
-          bgColor: ToastColors.success,
-          visibile: "yes",
-        })
-      );
-      e.target.disabled = false
-
-    })).catch((err) => {
-      dispatch(
-        setToast({
-          message: "Error during image delete",
-          bgColor: ToastColors.failure,
-          visibile: "yes",
-        })
-      );
-      e.target.disabled = false
-    })
+    e.target.disabled = true;
+    await ApiServices.deleteuserProfileImage({ email: email })
+      .then(async (res) => {
+        localStorage.setItem("user", JSON.stringify(res.data));
+        dispatch(setLoginData(jwtDecode(res.data.accessToken)));
+        await axiosInstance.customFnAddTokenInHeader(res.data.accessToken);
+        dispatch(
+          setToast({
+            message: "Image removed successfully",
+            bgColor: ToastColors.success,
+            visibile: "yes",
+          })
+        );
+        e.target.disabled = false;
+      })
+      .catch((err) => {
+        dispatch(
+          setToast({
+            message: "Error during image delete",
+            bgColor: ToastColors.failure,
+            visibile: "yes",
+          })
+        );
+        e.target.disabled = false;
+      });
     setTimeout(() => {
       dispatch(
         setToast({
@@ -113,7 +123,25 @@ const Navbar = () => {
         })
       );
     }, 4000);
-  }
+  };
+
+  const handleClickOutside = (event) => {
+    if (
+      userDetailsRef.current &&
+      !userDetailsRef.current.contains(event.target)
+    ) {
+      document
+        .getElementsByClassName("userDetails")[0]
+        .classList.remove("showUserDetails");
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -129,9 +157,13 @@ const Navbar = () => {
             .classList.toggle("showUserDetails");
         }}
       >
-        <img className="Profile-img" src={image === undefined ? "Profile.jpeg" : image} alt="" />
+        <img
+          className="Profile-img"
+          src={image === undefined ? "Profile.jpeg" : image}
+          alt=""
+        />
       </div>
-      <div className="userDetails">
+      <div className="userDetails" ref={userDetailsRef}>
         <div
           className="closeIcon"
           onClick={() => {
@@ -151,10 +183,13 @@ const Navbar = () => {
                 cursor: "pointer",
                 maxWidth: "100%",
               }}
-              src={image === undefined ? "Profile.jpeg" : image} 
+              src={image === undefined ? "Profile.jpeg" : image}
               alt="Profile"
             />
-            <i className="fas fa-pencil-alt edit-icon" onClick={handleClickOpen}></i>
+            <i
+              className="fas fa-pencil-alt edit-icon"
+              onClick={handleClickOpen}
+            ></i>
           </div>
         </div>
 
@@ -204,9 +239,13 @@ const Navbar = () => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        style={{}}
       >
-        <DialogTitle id="alert-dialog-title" style={{display: 'flex', justifyContent: 'center'}}>
-          {'Profile picture'}
+        <DialogTitle
+          id="alert-dialog-title"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          {"Profile Picture"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -215,19 +254,25 @@ const Navbar = () => {
                 style={{
                   borderRadius: "50%",
                   cursor: "pointer",
-                  height: '150px',
-                  width: '150px'
+                  height: "150px",
+                  width: "150px",
                 }}
                 src={image === undefined ? "Profile.jpeg" : image}
                 alt="Profile"
               />
-           </div>
-            <div>
-              <input type="file" name="" onChange={handleImage}/>
             </div>
-            <div style={{ display: 'flex', gap: '2px' }}>
-              <button onClick={submit}>send Image</button>
-              <button onClick={deleteImg}>delete Image</button>
+            <div>
+              <input type="file" name="" onChange={handleImage} />
+            </div>
+            <div style={{ display: "flex", gap: "2px", borderRadius: "10px" }}>
+
+              <button onClick={submit} disabled = {changeImage ==''? true : false}>
+                <i class="fas fa-upload" style={{marginRight: '5px'}}></i> Update
+              </button>
+
+              <button onClick={deleteImg}>
+                <i class="fas fa-trash-alt" style={{marginRight: '5px'}}></i> Delete
+              </button>
             </div>
           </DialogContentText>
         </DialogContent>
