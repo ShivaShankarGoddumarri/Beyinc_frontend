@@ -27,7 +27,7 @@ const App = () => {
     <div>
       <Suspense fallback={<div className="Loading">
         <img src="Loader.gif"/>
-        Loading...
+        <div className="Loading-Text">Loading...</div>
       </div>}>
         <Toast />
         <Navbar/>
