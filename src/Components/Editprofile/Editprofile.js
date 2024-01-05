@@ -290,6 +290,72 @@ const Editprofile = () => {
           <center>
             <h1 className="update-heading">Profile Update</h1>
           </center>
+
+
+          <div
+            className="input-container"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="radio"
+                name="role"
+                disabled
+                checked={role === "Entrepreneur"}
+                value="Entrepreneur"
+                id="Entrepreneur"
+                onClick={handleChangeRadio}
+              />
+              <label for="Entrepreneur">Entrepreneur</label>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="radio"
+                name="role"
+                disabled
+                checked={role === "Mentor"}
+                value="Mentor"
+                id="Mentor"
+                onClick={handleChangeRadio}
+              />
+              <label for="Mentor">Mentor</label>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="radio"
+                name="role"
+                disabled
+                checked={role === "Investor"}
+                value="Investor"
+                id="Investor"
+                onClick={handleChangeRadio}
+              />
+              <label for="Investor">Investor</label>
+            </div>
+          </div>
+
           <div className="input-container">
             <input
               type="email"
@@ -358,70 +424,7 @@ const Editprofile = () => {
             />
           </div>
 
-          <div
-            className="input-container"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <input
-                type="radio"
-                name="role"
-                disabled
-                checked={role === "Entrepreneur"}
-                value="Entrepreneur"
-                id="Entrepreneur"
-                onClick={handleChangeRadio}
-              />
-              <label for="Entrepreneur">Entrepreneur</label>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <input
-                type="radio"
-                name="role"
-                disabled
-                checked={role === "Mentor"}
-                value="Mentor"
-                id="Mentor"
-                onClick={handleChangeRadio}
-              />
-              <label for="Mentor">Mentor</label>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <input
-                type="radio"
-                name="role"
-                disabled
-                checked={role === "Investor"}
-                value="Investor"
-                id="Investor"
-                onClick={handleChangeRadio}
-              />
-              <label for="Investor">Investor</label>
-            </div>
-          </div>
-
+          
           <div className="input-container">
             <input
               type="text"
