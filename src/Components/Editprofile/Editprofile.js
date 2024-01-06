@@ -368,8 +368,10 @@ const Editprofile = () => {
               onChange={handleChanges}
               // disabled={emailVerified}
               placeholder="Email Address*"
+              
             />
-
+ <span className="lock-icon">
+    <i className="fas fa-lock"></i></span>
             {/* {!isEmailOtpSent && isEmailValid && (
                 <button
                   type="button"
@@ -491,18 +493,13 @@ const Editprofile = () => {
             Update
           </button>
           <p>
-            <RouterLink
-              to="/"
-              style={{
-                textDecoration: "none",
-                fontWeight: "600",
-                color: "#1e4bb8",
-              }}
-              onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
-              onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+            <div className = 'back'
+             onClick={() => {
+              navigate(`/`)
+          }}
             >
-              Back to Home
-            </RouterLink>
+               <i className="fas fa-arrow-left" style={{marginRight: '5px'}}></i>Back to Home
+            </div>
           </p>
         </form>
       </div>
