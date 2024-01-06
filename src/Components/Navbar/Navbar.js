@@ -15,7 +15,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 const Navbar = () => {
-  const { email, role, userName, image } = useSelector(
+  const { email, role, userName, image, verified } = useSelector(
     (store) => store.auth.loginDetails
   );
   const [open, setOpen] = React.useState(false);
@@ -162,6 +162,15 @@ const Navbar = () => {
           src={image === undefined ? "Profile.jpeg" : image}
           alt=""
         />
+        {verified === 'approved' && <abbr title="verified">
+          <img
+            src="checked.png"
+            height={20}
+            style={{ right: "20px", height: '13px', width: '13px' }}
+            alt="Your Alt Text"
+            className="successIcons"
+          />
+        </abbr>}
       </div>
       <div className="userDetails" ref={userDetailsRef}>
         <div
