@@ -41,6 +41,26 @@ label {
     margin-bottom: 10px;
    
 }
+.lock-icon {
+    position: absolute;
+    right: 10px; 
+    top: 50%;
+    transform: translateY(-50%);
+    color: #555; 
+    
+  }
+
+.back{
+    color: #1e4bb8;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 12px 10px;
+    width: 97%;
+}
+.back:hover{
+    /* border-radius: 50% !important ;  */
+    background-color: #EAF1FB;
+}
 
 .otp_button {
     width: 20%;
